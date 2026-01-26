@@ -1,6 +1,7 @@
 import { Header } from "./header/Header";
 import { Sidebar } from "./sidebar/Sidebar";
 import "./AppLayout.css";
+import { Outlet } from "react-router";
 
 export const AppLayout = () => {
   return (
@@ -8,8 +9,10 @@ export const AppLayout = () => {
       <Header />
       <Sidebar />
       <main>
-        <h1>Conteúdo será aqui</h1>
+        <Outlet />
       </main>
     </div>
   );
 };
+
+// usando o outlet consegui

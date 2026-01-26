@@ -1,24 +1,25 @@
-import './Sidebar.css';
+import { Link } from "react-router";
+import "./Sidebar.css";
 
 export const Sidebar = () => {
   return (
-    <div className="sidebar">
-      <aside>
-        <ul>
-          <li>
-            <a href="/">Home</a>
-          </li>
-          <li>
-            <a href="/Tools">Tools</a>
-          </li>
-          <li>
-            <a href="/Playground">Playground</a>
-          </li>
-          <li>
-            <a href="/About">About</a>
-          </li>
-        </ul>
-      </aside>
-    </div>
+    <aside className="sidebar">
+      <ul>
+        <li>
+          <Link to="/">Home</Link>
+        </li>
+        <li>
+          <Link to="/tools">Tools</Link>
+        </li>
+        <li>
+          <Link to="/playground">Playground</Link>
+        </li>
+        <li>
+          <Link to="/about">About</Link>
+        </li>
+      </ul>
+    </aside>
   );
 };
+
+// O uso da tag link permite com que naveguemos sem ficar atualizando nosso navegador a cada navegação
