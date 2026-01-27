@@ -1,5 +1,17 @@
+import { toolsMock } from "../../mock/tools.mock";
+
 export const ToolsPage = () => {
   return (
-    <div>ToolsPage</div>
-  )
-}
+    <section style={{ padding: 16 }}>
+      <h1 style={{ marginBottom: 12 }}>Tools</h1>
+
+      <ul style={{ listStyle: "none", padding: 0 }}>
+        {toolsMock.map((tool) => (
+          <li key={tool.id} style={{marginBottom: 10}}>
+            {tool.name}
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+};
