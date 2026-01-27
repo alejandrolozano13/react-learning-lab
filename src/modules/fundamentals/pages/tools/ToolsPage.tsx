@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { toolsMock } from "../../mock/tools.mock";
 
 export const ToolsPage = () => {
@@ -8,7 +9,7 @@ export const ToolsPage = () => {
       <ul style={{ listStyle: "none", padding: 0 }}>
         {toolsMock.map((tool) => (
           <li key={tool.id} style={{marginBottom: 10}}>
-            {tool.name}
+            <Link to={`/tools/${tool.id}`}>{tool.name}</Link>
           </li>
         ))}
       </ul>
