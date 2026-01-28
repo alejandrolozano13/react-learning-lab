@@ -10,7 +10,7 @@ export type Tool = {
 
 export const toolsMock: Tool[] = [
   {
-    id: "react-router",
+    id: "react-router-dom",
     name: "React Router",
     description:
       "Declarative routing for React applications, enabling nested routes, loaders, and data-driven navigation.",
