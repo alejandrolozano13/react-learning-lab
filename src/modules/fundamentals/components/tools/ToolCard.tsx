@@ -2,25 +2,30 @@ import { Link } from "react-router-dom";
 import type { Tool } from "../../domain/tools/tool";
 import "./ToolCard.css";
 import { getToolIcon } from "../../ui/icons/toolIcons";
+import { FavoriteButton } from "../../../../components/ui/favorite-button";
 
-type Props = { tool: Tool };
+type Props = {
+    tool: Tool,
+    isFavorite: boolean,
+    onToogleFavorite: (toolId: string) => void;
+};
 
-export function ToolCard({ tool }: Props) {
+export function ToolCard({ tool, isFavorite, onToogleFavorite }: Props) {
   const iconSrc = getToolIcon(tool.id);
 
   return (
     <article className="tool-card">
       <div className="tool-card__icon" aria-hidden="true">
-        {
-            iconSrc
-                ? (<img
-                        className="tool-card__iconImg"
-                        src={iconSrc}
-                        width={28}
-                        height={28}
-                    />)
-                : (<span className="tool-card__iconText">🧰</span>)
-        }
+        {iconSrc ? (
+          <img
+            className="tool-card__iconImg"
+            src={iconSrc}
+            width={28}
+            height={28}
+          />
+        ) : (
+          <span className="tool-card__iconText">🧰</span>
+        )}
       </div>
 
       <div className="tool-card__content">
@@ -35,6 +40,13 @@ export function ToolCard({ tool }: Props) {
         </div>
 
         <p className="tool-card__description">{tool.description}</p>
+      </div>
+
+      <div className="tool-card__actions">
+        <FavoriteButton
+          isFavorite={isFavorite}
+          onToggle={() => onToogleFavorite(tool.id)}
+        />
       </div>
     </article>
   );

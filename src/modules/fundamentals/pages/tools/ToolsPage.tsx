@@ -1,8 +1,13 @@
 import { toolsMock } from "../../mock/tools.mock";
 import { ToolCard } from "../../components/tools/ToolCard";
-import './ToolsPage.css';
+import "./ToolsPage.css";
+import { useOutletContext } from "react-router-dom";
+import { FavoritesOutletContext } from "../../../../app/components/layout/AppLayout";
 
 export const ToolsPage = () => {
+  const { favoriteToolIds, toggleFavorite } =
+    useOutletContext<FavoritesOutletContext>();
+
   return (
     <section className="tools-page">
       <header className="tools-page__header">
@@ -14,9 +19,10 @@ export const ToolsPage = () => {
       </header>
 
       <div className="tools-list">
-        {toolsMock.map((tool) => (
-          <ToolCard key={tool.id} tool={tool} />
-        ))}
+        {toolsMock.map((tool) => {
+          const isFavorite = favoriteToolIds.includes(tool.id);
+          return <ToolCard key={tool.id} tool={tool} isFavorite={isFavorite} onToogleFavorite={toggleFavorite}/>;
+        })}
       </div>
     </section>
   );
