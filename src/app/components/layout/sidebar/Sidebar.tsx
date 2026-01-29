@@ -21,5 +21,3 @@ export const Sidebar = () => {
     </aside>
   );
 };
-
-// O uso da tag link permite com que naveguemos sem ficar atualizando nosso navegador a cada navegação

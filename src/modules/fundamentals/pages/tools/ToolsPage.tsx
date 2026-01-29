@@ -1,18 +1,35 @@
-import { Link } from "react-router-dom-dom";
 import { toolsMock } from "../../mock/tools.mock";
+import { ToolCard } from "../../components/tools/ToolCard";
+import './ToolsPage.css';
 
 export const ToolsPage = () => {
   return (
-    <section style={{ padding: 16 }}>
-      <h1 style={{ marginBottom: 12 }}>Tools</h1>
+    <section className="tools-page">
+      <header className="tools-page__header">
+        <h1>Developer Tools</h1>
+        <p>
+          A curated collection of essential tools to enhance your development
+          workflow. Click on any tool to explore and get started.
+        </p>
+      </header>
 
-      <ul style={{ listStyle: "none", padding: 0 }}>
+      <div className="tools-list">
         {toolsMock.map((tool) => (
-          <li key={tool.id} style={{marginBottom: 10}}>
-            <Link to={`/tools/${tool.id}`}>{tool.name}</Link>
-          </li>
+          <ToolCard key={tool.id} tool={tool} />
         ))}
-      </ul>
+      </div>
     </section>
   );
 };
+
+/*
+    Explicações semânticas:
+    ---------------------------------------------------------------------------------------------------------------------
+    
+    - Section: Agregamos conteúdos de significado para a página.
+        - Neste caso definimos a seção de dev tools.
+
+    - Header: Definimos a área de título da seção.
+
+    - div.tools-list: Definimos o layout da lista.
+*/

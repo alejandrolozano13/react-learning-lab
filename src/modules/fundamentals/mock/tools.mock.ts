@@ -1,12 +1,4 @@
-// usamos type para mapear nossas entidades em algo parecido com o domain do .NET
-export type Tool = {
-  id: string;
-  name: string;
-  description: string;
-  category: "dev" | "ui" | "utils" | "testing";
-  tags: string[];
-  isFavorite: boolean;
-};
+import { Tool } from "../domain/tools/tool";
 
 export const toolsMock: Tool[] = [
   {

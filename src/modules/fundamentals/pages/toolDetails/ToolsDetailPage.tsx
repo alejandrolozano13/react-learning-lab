@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom-dom";
+import { Link, useParams } from "react-router-dom";
 import { toolsMock } from "../../mock/tools.mock";
 
 export const ToolsDetailPage = () => {
