@@ -1,6 +1,6 @@
 .tool-card {
   display: grid;
-  grid-template-columns: 56px 1fr auto;
+  grid-template-columns: 56px 1fr;
   gap: 16px;
 
   padding: 16px 18px;
@@ -12,14 +12,23 @@
 }
 
 .tool-card__icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 14px;
-    display: grid;    
-    place-items: center;
-
-    background: linear-gradient(135deg, #7c3aed, #ec4899);
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #7c3aed, #ec4899);
 }
+
+.tool-card__iconImg {
+  width: 28px;
+  height: 28px;
+  display: block;
+
+  /* Isso aqui serve para deixar ícones em branco */
+  filter: brightness(0) invert(1);
+}
+
 
 .tool-card__iconText {
   font-size: 22px;
@@ -68,7 +77,6 @@
   font-size: 14px;
   line-height: 1.4;
 
-  /* evita quebrar layout */
   overflow: hidden;
   text-overflow: ellipsis;
 }
