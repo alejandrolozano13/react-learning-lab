@@ -1,32 +1,19 @@
+import "./ToolCard.css";
 import { Link } from "react-router-dom";
 import type { Tool } from "../../domain/tools/tool";
-import "./ToolCard.css";
-import { getToolIcon } from "../../ui/icons/toolIcons";
 import { FavoriteButton } from "../../../../components/ui/favorite-button";
+import { ToolIcon } from "./ToolIcon";
 
 type Props = {
-    tool: Tool,
-    isFavorite: boolean,
-    onToggleFavorite: (toolId: string) => void;
+  tool: Tool;
+  isFavorite: boolean;
+  onToggleFavorite: (toolId: string) => void;
 };
 
 export function ToolCard({ tool, isFavorite, onToggleFavorite }: Props) {
-  const iconSrc = getToolIcon(tool.id);
-
   return (
     <article className="tool-card">
-      <div className="tool-card__icon" aria-hidden="true">
-        {iconSrc ? (
-          <img
-            className="tool-card__iconImg"
-            src={iconSrc}
-            width={28}
-            height={28}
-          />
-        ) : (
-          <span className="tool-card__iconText">🧰</span>
-        )}
-      </div>
+      <ToolIcon toolId={tool.id} />
 
       <div className="tool-card__content">
         <div className="tool-card__titleRow">
