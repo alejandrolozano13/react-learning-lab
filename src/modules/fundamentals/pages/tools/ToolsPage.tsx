@@ -21,7 +21,7 @@ export const ToolsPage = () => {
       <div className="tools-list">
         {toolsMock.map((tool) => {
           const isFavorite = favoriteToolIds.includes(tool.id);
-          return <ToolCard key={tool.id} tool={tool} isFavorite={isFavorite} onToogleFavorite={toggleFavorite}/>;
+          return <ToolCard key={tool.id} tool={tool} isFavorite={isFavorite} onToggleFavorite={toggleFavorite}/>;
         })}
       </div>
     </section>
@@ -29,13 +29,10 @@ export const ToolsPage = () => {
 };
 
 /*
-    Explicações semânticas:
-    ---------------------------------------------------------------------------------------------------------------------
-    
-    - Section: Agregamos conteúdos de significado para a página.
-        - Neste caso definimos a seção de dev tools.
+    - ToolCard é so UI + eventos.
+      - Recebe: tools (dados), isFavorite (estado derivado), onToggleFavorite (ação)
+      - Não guardamos o estado aqui, apenas disparamos o evento que afetará o nosso context state.
 
-    - Header: Definimos a área de título da seção.
-
-    - div.tools-list: Definimos o layout da lista.
+    - Dessa forma separamos a UI da regra de negócios ('favoritar').
+    - Além de facilitar testar e reaproveitar.
 */

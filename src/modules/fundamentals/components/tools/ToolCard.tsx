@@ -7,10 +7,10 @@ import { FavoriteButton } from "../../../../components/ui/favorite-button";
 type Props = {
     tool: Tool,
     isFavorite: boolean,
-    onToogleFavorite: (toolId: string) => void;
+    onToggleFavorite: (toolId: string) => void;
 };
 
-export function ToolCard({ tool, isFavorite, onToogleFavorite }: Props) {
+export function ToolCard({ tool, isFavorite, onToggleFavorite }: Props) {
   const iconSrc = getToolIcon(tool.id);
 
   return (
@@ -45,7 +45,7 @@ export function ToolCard({ tool, isFavorite, onToogleFavorite }: Props) {
       <div className="tool-card__actions">
         <FavoriteButton
           isFavorite={isFavorite}
-          onToggle={() => onToogleFavorite(tool.id)}
+          onToggle={() => onToggleFavorite(tool.id)}
         />
       </div>
     </article>
