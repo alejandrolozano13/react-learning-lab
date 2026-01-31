@@ -1,0 +1,6 @@
+.tool-detail-page {
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}

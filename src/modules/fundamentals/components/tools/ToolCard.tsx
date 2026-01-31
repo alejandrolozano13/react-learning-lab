@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import type { Tool } from "../../domain/tools/tool";
 import { FavoriteButton } from "../../../../components/ui/favorite-button";
 import { ToolIcon } from "./ToolIcon";
+import { ToolCategoryBadge } from "./ToolCategoryBadge";
 
 type Props = {
   tool: Tool;
@@ -23,7 +24,7 @@ export function ToolCard({ tool, isFavorite, onToggleFavorite }: Props) {
             </Link>
           </h3>
 
-          <span className="tool-card__badge">{tool.category}</span>
+          <ToolCategoryBadge category={tool.category} />
         </div>
 
         <p className="tool-card__description">{tool.description}</p>

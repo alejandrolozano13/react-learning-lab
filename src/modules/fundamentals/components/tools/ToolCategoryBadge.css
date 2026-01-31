@@ -1,0 +1,9 @@
+.tool-card__badge {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+
+  background: #eef2ff;
+  color: #4338ca;
+  border: 1px solid rgba(67, 56, 202, 0.18);
+}
