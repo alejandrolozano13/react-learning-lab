@@ -7,7 +7,7 @@ import type { CategoryOption } from "../../domain/tools/CategoryOption";
 
 import { toolsMock } from "../../mock/tools.mock";
 import { ToolCard } from "../../components/tools/ToolCard";
-import { ToolsFiltersBar } from "../../components/tools/ToolsFiltersBar";
+import { ToolsFiltersBar } from "./components/ToolsFiltersBar";
 
 import { useOutletContext } from "react-router-dom";
 import { FavoritesOutletContext } from "../../domain/tools/favorites-outlet-context";

@@ -1,8 +1,10 @@
-import { SortOption } from "./../../domain/tools/SortOption";
-import { CategoryOption } from "./../../domain/tools/CategoryOption";
+import "./ToolsFiltersBar.css";
 
-import { Input } from "./../../../../components/ui/input";
-import { NativeSelect } from "./../../../../components/ui/native-select";
+import { SortOption } from "../../../domain/tools/SortOption";
+import { CategoryOption } from "../../../domain/tools/CategoryOption";
+
+import { Input } from "../../../../../components/ui/input";
+import { NativeSelect } from "../../../../../components/ui/native-select";
 
 type Props = {
   category: CategoryOption;
