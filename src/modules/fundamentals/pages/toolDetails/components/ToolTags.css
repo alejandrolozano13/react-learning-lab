@@ -1,0 +1,30 @@
+.tool-tags {
+  margin-top: auto;
+}
+
+.tool-tags__divider {
+  margin-bottom: 16px;
+}
+
+.tool-tags h2 {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.2;
+  margin: 0;
+  color: #61626f;
+  margin-bottom: 10px;
+}
+
+.tags-list {
+  margin-top: 12px;
+  display: flex;
+  gap: 12px;
+}
+
+.tool-tag-badge {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #eaebefcc;
+  border: 1px solid rgba(67, 56, 202, 0.18);
+}

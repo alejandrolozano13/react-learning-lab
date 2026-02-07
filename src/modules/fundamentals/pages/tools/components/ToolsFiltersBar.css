@@ -1,0 +1,18 @@
+.tools-page__filters {
+    display: flex;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    align-items: center;
+    gap: 16px;
+}
+
+.tools-page__filters > input,
+.tools-page__filters > .Input {
+  flex: 1;
+  cursor: pointer;
+}
+
+.tools-page__filters-actions {
+    display: flex;
+    gap: 12px;
+}

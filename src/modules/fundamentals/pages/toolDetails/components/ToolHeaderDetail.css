@@ -1,0 +1,17 @@
+.tool-header-detail {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 15px;
+}
+
+.tool-header-detail h1 {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.tool-header-detail__actions {
+  margin-left: auto;
+}

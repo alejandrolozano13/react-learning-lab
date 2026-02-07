@@ -1,0 +1,13 @@
+.tool-description {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.tool-description h2 {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.2;
+  margin: 0;
+  color: #61626f;
+  margin-bottom: 10px;
+}
