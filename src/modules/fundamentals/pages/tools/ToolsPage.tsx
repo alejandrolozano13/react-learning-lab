@@ -14,13 +14,30 @@ import { FavoritesOutletContext } from "../../domain/tools/favorites-outlet-cont
 import { useMemo, useState } from "react";
 import { useDebouncedValue } from "./../../../../hooks/useDebouncedValue";
 
+type ToolsEmptyStateProps = {
+  onClear: () => void;
+};
+
+function ToolsEmptyState({ onClear }: ToolsEmptyStateProps) {
+  return (
+    <div className="tools-empty">
+      <h2>Nenhuma ferramenta encontrada</h2>
+      <p>Tente ajustar a busca, a categoria ou a ordenação.</p>
+
+      <button type="button" className="tools-empty__clear" onClick={onClear}>
+        Limpar filtros
+      </button>
+    </div>
+  );
+}
+
 export const ToolsPage = () => {
   const { favoriteToolIds, toggleFavorite } =
     useOutletContext<FavoritesOutletContext>();
 
   const favoriteSet = useMemo(
     () => new Set(favoriteToolIds),
-    [favoriteToolIds]
+    [favoriteToolIds],
   );
 
   const [searchText, setSearchText] = useState<string>("");
@@ -39,7 +56,7 @@ export const ToolsPage = () => {
       tools: toolsMock,
       query: debouncedSearchText,
       category,
-      sort
+      sort,
     });
   }, [debouncedSearchText, category, sort]);
 
@@ -63,20 +80,26 @@ export const ToolsPage = () => {
         />
       </header>
 
-      <div className="tools-list">
-        {filteredTools.map((tool) => {
-          const isFavorite = favoriteSet.has(tool.id);
-
-          return (
+      {filteredTools.length === 0 ? ( // EMPTY STATE
+        <ToolsEmptyState
+          onClear={() => {
+            setSearchText("");
+            setCategory("all");
+            setSort("name-asc");
+          }}
+        />
+      ) : (
+        <div className="tools-list">
+          {filteredTools.map((tool) => ( // LISTA COM TOOLS
             <ToolCard
               key={tool.id}
               tool={tool}
-              isFavorite={isFavorite}
+              isFavorite={favoriteSet.has(tool.id)}
               onToggleFavorite={toggleFavorite}
             />
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 };

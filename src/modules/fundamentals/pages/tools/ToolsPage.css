@@ -2,6 +2,26 @@
     padding: 28px 32px;
 }
 
+.tools-empty {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.tools-empty h2 {
+  margin: 0 0 6px 0;
+}
+
+.tools-empty p {
+  margin: 0 0 12px 0;
+  opacity: 0.85;
+}
+
+.tools-empty__clear {
+  cursor: pointer;
+}
+
 .tools-page__header {
     margin-bottom: 22px;
 }

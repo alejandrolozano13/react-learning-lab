@@ -42,16 +42,17 @@ export const ToolsFiltersBar = ({
           onChange={(e) => onCategoryChange(e.target.value as CategoryOption)}
         >
           <option value="all">Todas as categorias</option>
-          {categories
-            .filter((category) => category !== "all")
-            .map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
         </NativeSelect>
 
-        <NativeSelect value={sort} onChange={(e) => onSortChange(e.target.value as SortOption)}>
+        <NativeSelect
+          value={sort}
+          onChange={(e) => onSortChange(e.target.value as SortOption)}
+        >
           <option value="name-asc">Nome (A-Z)</option>
           <option value="name-desc">Nome (Z-A)</option>
         </NativeSelect>
