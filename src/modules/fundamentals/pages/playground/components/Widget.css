@@ -1,0 +1,25 @@
+.widget {
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.widget__value {
+  font-size: 24px;
+  margin: 12px 0;
+}
+
+.widget__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.widget--active {
+  border-color: #16a34a;
+  background-color: rgba(22, 163, 74, 0.05);
+}
+
+.widget__list {
+  margin-top: 8px;
+  padding-left: 16px;
+}
