@@ -5,6 +5,7 @@ import { ToolsPage } from "../../modules/fundamentals/pages/tools/ToolsPage";
 import { ToolsDetailPage } from "../../modules/fundamentals/pages/toolDetails/ToolsDetailPage";
 import { PlaygroundPage } from "../../modules/fundamentals/pages/playground/PlaygroundPage";
 import { AboutPage } from "../../modules/fundamentals/pages/about/AboutPage";
+import { EffectsLabPage } from "../../modules/state-effects/pages/Effects/EffectsLabPage";
 
 export const appRouter = createBrowserRouter([
   {
@@ -15,7 +16,8 @@ export const appRouter = createBrowserRouter([
       { path: "tools", element: <ToolsPage /> },
       { path: "tools/:id", element: <ToolsDetailPage /> },
       { path: "playground", element: <PlaygroundPage /> },
-      { path: "about", element: <AboutPage /> }
+      { path: "about", element: <AboutPage /> },
+      { path: "state-effects/effects-lab", element: <EffectsLabPage /> },
     ],
   },
   {

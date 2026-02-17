@@ -13,3 +13,8 @@
 .sidebar li {
     margin-bottom: 12px;
 }
+
+.sidebar a.active {
+  font-weight: bold;
+  color: #6366f1;
+}
