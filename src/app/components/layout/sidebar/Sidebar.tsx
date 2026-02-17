@@ -25,6 +25,9 @@ export const Sidebar = () => {
         <li>
           <NavLink to="/state-effects/tools-fetch-lab">Tools Fetch Lab</NavLink>
         </li>
+        <li>
+          <NavLink to="/state-effects/race-condition-lab">Race condition Lab</NavLink>
+        </li>
       </ul>
     </aside>
   );

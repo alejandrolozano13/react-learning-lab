@@ -7,6 +7,7 @@ import { PlaygroundPage } from "../../modules/fundamentals/pages/playground/Play
 import { AboutPage } from "../../modules/fundamentals/pages/about/AboutPage";
 import { EffectsLabPage } from "../../modules/state-effects/pages/Effects/EffectsLabPage";
 import { ToolsFetchLabPage } from "../../modules/state-effects/pages/Effects/ToolsFetchLabPage";
+import { RaceConditionLabPage } from "../../modules/state-effects/pages/Effects/RaceConditionLabPage";
 
 export const appRouter = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ export const appRouter = createBrowserRouter([
       { path: "about", element: <AboutPage /> },
       { path: "state-effects/effects-lab", element: <EffectsLabPage /> },
       { path: "state-effects/tools-fetch-lab", element: <ToolsFetchLabPage /> },
+      { path: "state-effects/race-condition-lab", element: <RaceConditionLabPage /> },
     ],
   },
   {
