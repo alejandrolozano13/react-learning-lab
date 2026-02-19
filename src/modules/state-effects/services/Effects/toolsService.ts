@@ -14,9 +14,17 @@ export async function listTools(): Promise<Tool[]> {
   return toolsMock;
 }
 
-export async function searchTools(query: string): Promise<Tool[]> {
+export async function searchTools(query: string, signal?: AbortSignal): Promise<Tool[]> {
   const delay = query.length === 1 ? 2000 : 500;
-  await new Promise((resolve) => setTimeout(resolve, delay));
+  
+  await new Promise<void>((resolve, reject) => {
+    const id = setTimeout(resolve, delay);
+
+    signal?.addEventListener("abort", () => {
+      clearTimeout(id);
+      reject(new DOMException("Aborted", "AbortError"));
+    });
+  });
 
   return toolsMock.filter((tool) =>
     tool.name.toLocaleLowerCase().includes(query.toLocaleLowerCase()),

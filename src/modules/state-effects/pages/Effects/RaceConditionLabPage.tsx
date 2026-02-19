@@ -18,20 +18,23 @@ export const RaceConditionLabPage = () => {
 
   useEffect(() => {
     if (!debouncedQuery) return;
-    let ignore = false;
+    const controller = new AbortController();
 
     const run = async () => {
-      const result = await searchTools(debouncedQuery);
-      if (ignore) return;
-      console.log("Resposta para: ", debouncedQuery);
-      setData(result);
+      try {
+        const result = await searchTools(debouncedQuery, controller.signal);
+        setData(result);
+      }
+      catch (error) {
+        if((error as DOMException).name === "AbortError") return;
+        console.error("Erro real:", error);
+      }
     };
 
     run();
 
     return () => {
-      ignore = true; // é bom usar quando possuimos promises concorrentes do mesmo setData para sempre ficar com a ultima
-      // prática conhecida como Latest Wins
+      controller.abort(); // isso dispara nosso promise reject no toolsService e manda a request antiga pro catch
     };
   }, [debouncedQuery]);
 
