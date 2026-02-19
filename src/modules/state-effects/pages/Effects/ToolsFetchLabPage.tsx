@@ -11,32 +11,31 @@ export const ToolsFetchLabPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let isActive = true;
+    const controller = new AbortController();
 
     const run = async () => {
       setStatus("loading");
       setError(null);
-      console.log("Rodou");
-      try {
-        const tools = await listTools();
-        if (!isActive) return; // isso só será possível se a promise foi resolvida durante navegação por exemplo
+      
+      const response = await listTools({ signal: controller.signal });
+      const requisicaoFalhou = !response.ok;
 
-        setData(tools);
-        setStatus("success");
-      } catch (e) {
-        if (!isActive) return;
+      if(requisicaoFalhou) {
+        const requisicaoFoiAbortada = response.error.kind === "aborted";
+        if(requisicaoFoiAbortada) return;
 
         setStatus("error");
-        setError(e instanceof Error ? e.message : "Erro desconhecido");
+        setError(response.error.message);
+        return;
       }
+
+      setData(response.data);
+      setStatus("success");
     };
 
     run();
 
-    return () => {
-      isActive = false; // isso aqui serve para matar o setData no component se o usuario navegar
-      // isso evita ficar alimentando nosso component erradamente quando interrompem a espera da promise por navegação.
-    };
+    return () => controller.abort();
   }, []);
 
   return (

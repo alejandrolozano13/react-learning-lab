@@ -17,25 +17,21 @@ export const RaceConditionLabPage = () => {
   }, [query]);
 
   useEffect(() => {
-    if (!debouncedQuery) return;
+    if (!debouncedQuery) return setData([]);
     const controller = new AbortController();
 
     const run = async () => {
-      try {
-        const result = await searchTools(debouncedQuery, controller.signal);
-        setData(result);
-      }
-      catch (error) {
-        if((error as DOMException).name === "AbortError") return;
-        console.error("Erro real:", error);
-      }
+      const response = await searchTools(debouncedQuery, {
+        signal: controller.signal,
+      });
+      const requisicaoFalhou = !response.ok;
+
+      if (requisicaoFalhou) return;
+      setData(response.data);
     };
 
     run();
-
-    return () => {
-      controller.abort(); // isso dispara nosso promise reject no toolsService e manda a request antiga pro catch
-    };
+    return () => controller.abort();
   }, [debouncedQuery]);
 
   return (
