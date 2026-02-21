@@ -11,6 +11,9 @@ import { useEffect } from "react";
 export const ToolsDetailPage = () => {
   const { id } = useParams<{ id: string }>();
 
+  const { favoriteToolIds, toggleFavorite } =
+    useOutletContext<FavoritesOutletContext>();
+
   const {
     data: tool,
     loading,
@@ -62,9 +65,6 @@ export const ToolsDetailPage = () => {
         <Link to="/tools">Voltar</Link>
       </section>
     );
-
-  const { favoriteToolIds, toggleFavorite } =
-    useOutletContext<FavoritesOutletContext>();
 
   const isFavorite = favoriteToolIds.includes(tool.id);
 
