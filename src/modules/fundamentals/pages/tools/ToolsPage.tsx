@@ -34,12 +34,12 @@ export const ToolsPage = () => {
     loading,
     error,
     execute: refetchTools,
-  } = useAsync<[], Tool[]>(listTools, { immediate: true });
+  } = useAsync(listTools, { immediate: true });
 
   const categories = useMemo(() => {
     const unique = new Set((tools ?? []).map((tool) => tool.category));
     return Array.from(unique).sort();
-  }, []);
+  }, [tools]);
 
   const filteredTools = useMemo(() => {
     return filterAndSortTools({
@@ -48,7 +48,7 @@ export const ToolsPage = () => {
       category,
       sort,
     });
-  }, [debouncedSearchText, category, sort]);
+  }, [tools, debouncedSearchText, category, sort]);
 
   return (
     <section className="tools-page">
