@@ -2,7 +2,8 @@ import type { Tool } from "../../../fundamentals/domain/tools/tool";
 import { toolsMock } from "../../../fundamentals/mock/tools.mock";
 import { mockRequest } from "../../data/api/mockClient";
 import { withRetry } from "../../data/api/retry";
-import { Result } from "../../data/types/result";
+import { AppError, Result } from "../../data/types/result";
+import type { RequestOptions } from "../../data/types/requestOptions";
 
 type Options = {
   signal?: AbortSignal;
@@ -38,14 +39,19 @@ export async function searchTools(
 
 export async function getToolById(
   id: string,
-  options: Options = {},
+  options: RequestOptions = {},
 ): Promise<Result<Tool>> {
-  return mockRequest(
-    () => {
-      const found = toolsMock.find((tool) => tool.id === id);
-      if (!found) throw new Error("NotFound");
-      return found;
-    },
+  const result = await mockRequest(
+    () => toolsMock.find((tool) => tool.id === id) ?? null,
     { signal: options.signal, failRate: 0.1 },
   );
+
+  if (!result.ok) return result;
+
+  if (!result.data) {
+    const notFound: AppError = { kind: "unknown", message: "Tool não encontrada." };
+    return { ok: false, error: notFound };
+  }
+
+  return { ok: true, data: result.data };
 }
