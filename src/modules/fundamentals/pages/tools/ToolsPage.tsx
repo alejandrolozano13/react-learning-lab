@@ -1,35 +1,18 @@
 import "./ToolsPage.css";
 
 import { filterAndSortTools } from "../../helpers/tools/filterAndSortTools";
-
+import { useAsync } from "../../../state-effects/hooks/useAsync";
+import { listTools } from "../../../state-effects/services/Effects/toolsService";
 import type { SortOption } from "../../domain/tools/SortOption";
 import type { CategoryOption } from "../../domain/tools/CategoryOption";
-
-import { toolsMock } from "../../mock/tools.mock";
 import { ToolCard } from "../../components/tools/ToolCard";
 import { ToolsFiltersBar } from "./components/ToolsFiltersBar";
-
 import { useOutletContext } from "react-router-dom";
 import { FavoritesOutletContext } from "../../domain/tools/favorites-outlet-context";
 import { useMemo, useState } from "react";
 import { useDebouncedValue } from "./../../../../hooks/useDebouncedValue";
-
-type ToolsEmptyStateProps = {
-  onClear: () => void;
-};
-
-function ToolsEmptyState({ onClear }: ToolsEmptyStateProps) {
-  return (
-    <div className="tools-empty">
-      <h2>Nenhuma ferramenta encontrada</h2>
-      <p>Tente ajustar a busca, a categoria ou a ordenação.</p>
-
-      <button type="button" className="tools-empty__clear" onClick={onClear}>
-        Limpar filtros
-      </button>
-    </div>
-  );
-}
+import { Tool } from "../../domain/tools/tool";
+import { EmptyToolsPage } from "./EmptyToolsPage";
 
 export const ToolsPage = () => {
   const { favoriteToolIds, toggleFavorite } =
@@ -46,14 +29,21 @@ export const ToolsPage = () => {
 
   const debouncedSearchText = useDebouncedValue(searchText, 500);
 
+  const {
+    data: tools,
+    loading,
+    error,
+    execute: refetchTools,
+  } = useAsync<[], Tool[]>(listTools, { immediate: true });
+
   const categories = useMemo(() => {
-    const unique = new Set(toolsMock.map((tool) => tool.category));
+    const unique = new Set((tools ?? []).map((tool) => tool.category));
     return Array.from(unique).sort();
   }, []);
 
   const filteredTools = useMemo(() => {
     return filterAndSortTools({
-      tools: toolsMock,
+      tools: tools ?? [],
       query: debouncedSearchText,
       category,
       sort,
@@ -79,26 +69,40 @@ export const ToolsPage = () => {
           onSortChange={setSort}
         />
       </header>
+      {loading && <p>Carregando...</p>}
 
-      {filteredTools.length === 0 ? ( // EMPTY STATE
-        <ToolsEmptyState
-          onClear={() => {
-            setSearchText("");
-            setCategory("all");
-            setSort("name-asc");
-          }}
-        />
-      ) : (
-        <div className="tools-list">
-          {filteredTools.map((tool) => ( // LISTA COM TOOLS
-            <ToolCard
-              key={tool.id}
-              tool={tool}
-              isFavorite={favoriteSet.has(tool.id)}
-              onToggleFavorite={toggleFavorite}
-            />
-          ))}
+      {!loading && error && (
+        <div className="tools-error">
+          <p>{error.message}</p>
+          <button type="button" onClick={() => void refetchTools()}>
+            Tentar novamente
+          </button>
         </div>
+      )}
+
+      {!loading && !error && (
+        <>
+          {filteredTools.length === 0 ? (
+            <EmptyToolsPage
+              onClear={() => {
+                setSearchText("");
+                setCategory("all");
+                setSort("name-asc");
+              }}
+            />
+          ) : (
+            <div className="tools-list">
+              {filteredTools.map((tool) => (
+                <ToolCard
+                  key={tool.id}
+                  tool={tool}
+                  isFavorite={favoriteSet.has(tool.id)}
+                  onToggleFavorite={toggleFavorite}
+                />
+              ))}
+            </div>
+          )}
+        </>
       )}
     </section>
   );
