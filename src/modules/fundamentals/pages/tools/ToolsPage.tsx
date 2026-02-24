@@ -9,10 +9,10 @@ import { ToolCard } from "../../components/tools/ToolCard";
 import { ToolsFiltersBar } from "./components/ToolsFiltersBar";
 import { useOutletContext } from "react-router-dom";
 import { FavoritesOutletContext } from "../../domain/tools/favorites-outlet-context";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDebouncedValue } from "./../../../../hooks/useDebouncedValue";
-import { Tool } from "../../domain/tools/tool";
 import { EmptyToolsPage } from "./EmptyToolsPage";
+import { Tool } from "../../domain/tools/tool";
 
 export const ToolsPage = () => {
   const { favoriteToolIds, toggleFavorite } =
@@ -26,15 +26,10 @@ export const ToolsPage = () => {
   const [searchText, setSearchText] = useState<string>("");
   const [category, setCategory] = useState<CategoryOption>("all");
   const [sort, setSort] = useState<SortOption>("name-asc");
-
   const debouncedSearchText = useDebouncedValue(searchText, 500);
-
-  const {
-    data: tools,
-    loading,
-    error,
-    execute: refetchTools,
-  } = useAsync(listTools, { immediate: true });
+  
+  const { data: tools, loading, error, execute } = useAsync<Tool[]>();
+  useEffect(() => void execute(listTools), [execute]);
 
   const categories = useMemo(() => {
     const unique = new Set((tools ?? []).map((tool) => tool.category));
@@ -74,7 +69,7 @@ export const ToolsPage = () => {
       {!loading && error && (
         <div className="tools-error">
           <p>{error.message}</p>
-          <button type="button" onClick={() => void refetchTools()}>
+          <button type="button" onClick={() => void execute(listTools)}>
             Tentar novamente
           </button>
         </div>
