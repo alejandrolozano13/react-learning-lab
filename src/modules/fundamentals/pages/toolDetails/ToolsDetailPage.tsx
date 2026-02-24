@@ -7,6 +7,7 @@ import { ToolTags } from "./components/ToolTags";
 import { useAsync } from "../../../state-effects/hooks/useAsync";
 import { getToolById } from "../../../state-effects/services/Effects/toolsService";
 import { useEffect } from "react";
+import { Tool } from "../../domain/tools/tool";
 
 export const ToolsDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,17 +15,12 @@ export const ToolsDetailPage = () => {
   const { favoriteToolIds, toggleFavorite } =
     useOutletContext<FavoritesOutletContext>();
 
-  const {
-    data: tool,
-    loading,
-    error,
-    execute: fetchById,
-  } = useAsync(getToolById);
-
+  const { data: tool, loading, error, execute } = useAsync<Tool>();
+  
   useEffect(() => {
-    if (!id) return;
-    void fetchById(id);
-  }, [id, fetchById]);
+    if(!id) return;
+    void execute((options) => getToolById(id, options));
+  }, [id, execute]);
 
   if (!id) {
     return (
@@ -49,7 +45,7 @@ export const ToolsDetailPage = () => {
         <p>{error.message}</p>
 
         <div style={{ display: "flex", gap: 8 }}>
-          <button type="button" onClick={() => void fetchById(id)}>
+          <button type="button" onClick={() => id && execute((options) => getToolById(id, options))}>
             Tentar novamente
           </button>
 
