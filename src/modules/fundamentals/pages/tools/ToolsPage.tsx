@@ -1,7 +1,6 @@
 import "./ToolsPage.css";
 
 import { filterAndSortTools } from "../../helpers/tools/filterAndSortTools";
-import { useAsync } from "../../../state-effects/hooks/useAsync";
 import { listTools } from "../../../state-effects/services/Effects/toolsService";
 import type { SortOption } from "../../domain/tools/SortOption";
 import type { CategoryOption } from "../../domain/tools/CategoryOption";
@@ -13,6 +12,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useDebouncedValue } from "./../../../../hooks/useDebouncedValue";
 import { EmptyToolsPage } from "./EmptyToolsPage";
 import { Tool } from "../../domain/tools/tool";
+import { useFetch } from "../../../state-effects/hooks/useFetch";
 
 export const ToolsPage = () => {
   const { favoriteToolIds, toggleFavorite } =
@@ -27,9 +27,8 @@ export const ToolsPage = () => {
   const [category, setCategory] = useState<CategoryOption>("all");
   const [sort, setSort] = useState<SortOption>("name-asc");
   const debouncedSearchText = useDebouncedValue(searchText, 500);
-  
-  const { data: tools, loading, error, execute } = useAsync<Tool[]>();
-  useEffect(() => void execute(listTools), [execute]);
+
+  const { data: tools, loading, error, execute } = useFetch<Tool[]>(listTools);
 
   const categories = useMemo(() => {
     const unique = new Set((tools ?? []).map((tool) => tool.category));
