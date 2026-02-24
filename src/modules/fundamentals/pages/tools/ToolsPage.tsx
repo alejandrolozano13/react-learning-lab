@@ -8,7 +8,7 @@ import { ToolCard } from "../../components/tools/ToolCard";
 import { ToolsFiltersBar } from "./components/ToolsFiltersBar";
 import { useOutletContext } from "react-router-dom";
 import { FavoritesOutletContext } from "../../domain/tools/favorites-outlet-context";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useDebouncedValue } from "./../../../../hooks/useDebouncedValue";
 import { EmptyToolsPage } from "./EmptyToolsPage";
 import { Tool } from "../../domain/tools/tool";
@@ -28,7 +28,7 @@ export const ToolsPage = () => {
   const [sort, setSort] = useState<SortOption>("name-asc");
   const debouncedSearchText = useDebouncedValue(searchText, 500);
 
-  const { data: tools, loading, error, execute } = useFetch<Tool[]>(listTools);
+  const { data: tools, loading, error, execute } = useFetch(listTools);
 
   const categories = useMemo(() => {
     const unique = new Set((tools ?? []).map((tool) => tool.category));

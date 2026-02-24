@@ -1,25 +1,31 @@
 import { useEffect } from "react";
-import { Result } from "../data/types/result";
+import type { Result } from "../data/types/result";
 import { useAsync } from "../hooks/useAsync";
 
-type Runner<T> = (options: { signal?: AbortSignal }) => Promise<Result<T>>;
+type WithSignal = { signal?: AbortSignal };
 
-type UseFetchOptions = {
-    enabled?: boolean, // isso aqui servirá para evitar ifs de fetchs condicionais (ex: se existe id, valores, etc).
-    dependencias?: unknown[]
+type Endpoint<TArgs extends unknown[], TData> = (
+  ...args: [...TArgs, WithSignal]
+) => Promise<Result<TData>>;
+
+type UseFetchOptions<TArgs extends unknown[]> = {
+  enabled?: boolean;
+  deps?: unknown[];
+  args?: TArgs;
 };
 
-export function useFetch<T>(
-  runner: Runner<T>,
-  options: UseFetchOptions = {},
+export function useFetch<TArgs extends unknown[], TData>(
+  endpoint: Endpoint<TArgs, TData>,
+  options: UseFetchOptions<TArgs> = {},
 ) {
-  const { enabled = true, dependencias = [] } = options;
-  const asyncState = useAsync<T>();
+  const { enabled = true, deps = [], args = [] as unknown as TArgs } = options;
+
+  const asyncState = useAsync<TData>();
 
   useEffect(() => {
     if (!enabled) return;
-    void asyncState.execute(runner);
-  }, [enabled, runner, ...dependencias]);
+    void asyncState.execute((opts) => endpoint(...args, opts));
+  }, [enabled, endpoint, ...deps]);
 
   return asyncState;
 }

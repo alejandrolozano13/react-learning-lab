@@ -4,10 +4,10 @@ import { FavoritesOutletContext } from "../../domain/tools/favorites-outlet-cont
 import { ToolHeaderDetail } from "./components/ToolHeaderDetail";
 import { ToolDescription } from "./components/ToolDescription";
 import { ToolTags } from "./components/ToolTags";
-import { useAsync } from "../../../state-effects/hooks/useAsync";
 import { getToolById } from "../../../state-effects/services/Effects/toolsService";
 import { useEffect } from "react";
 import { Tool } from "../../domain/tools/tool";
+import { useFetch } from "../../../state-effects/hooks/useFetch";
 
 export const ToolsDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -15,7 +15,11 @@ export const ToolsDetailPage = () => {
   const { favoriteToolIds, toggleFavorite } =
     useOutletContext<FavoritesOutletContext>();
 
-  const { data: tool, loading, error, execute } = useAsync<Tool>();
+  const { data: tool, loading, error, execute } = useFetch(getToolById, {
+    args: [id as string],
+    deps: [id],
+    enabled: !!id
+  });
   
   useEffect(() => {
     if(!id) return;
