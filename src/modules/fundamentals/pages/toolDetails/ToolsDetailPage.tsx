@@ -20,11 +20,6 @@ export const ToolsDetailPage = () => {
     deps: [id],
     enabled: !!id
   });
-  
-  useEffect(() => {
-    if(!id) return;
-    void execute((options) => getToolById(id, options));
-  }, [id, execute]);
 
   if (!id) {
     return (
