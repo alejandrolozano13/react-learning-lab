@@ -9,7 +9,7 @@ import { ToolsFiltersBar } from "./components/ToolsFiltersBar";
 import { useOutletContext } from "react-router-dom";
 import { FavoritesOutletContext } from "../../domain/tools/favorites-outlet-context";
 import { useMemo, useState } from "react";
-import { useDebouncedValue } from "./../../../../hooks/useDebouncedValue";
+import { useDebouncedValue } from "../../../state-effects/hooks/useDebouncedValue";
 import { EmptyToolsPage } from "./EmptyToolsPage";
 import { Tool } from "../../domain/tools/tool";
 import { useFetch } from "../../../state-effects/hooks/useFetch";
@@ -18,17 +18,19 @@ export const ToolsPage = () => {
   const { favoriteToolIds, toggleFavorite } =
     useOutletContext<FavoritesOutletContext>();
 
+  const [searchText, setSearchText] = useState<string>("");
+  const debouncedSearchText = useDebouncedValue(searchText, 500);
+
+
+  const [category, setCategory] = useState<CategoryOption>("all");
+  const [sort, setSort] = useState<SortOption>("name-asc");
+
+  const { data: tools, loading, error, execute } = useFetch(listTools);
+
   const favoriteSet = useMemo(
     () => new Set(favoriteToolIds),
     [favoriteToolIds],
   );
-
-  const [searchText, setSearchText] = useState<string>("");
-  const [category, setCategory] = useState<CategoryOption>("all");
-  const [sort, setSort] = useState<SortOption>("name-asc");
-  const debouncedSearchText = useDebouncedValue(searchText, 500);
-
-  const { data: tools, loading, error, execute } = useFetch(listTools);
 
   const categories = useMemo(() => {
     const unique = new Set((tools ?? []).map((tool) => tool.category));
