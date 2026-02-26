@@ -11,8 +11,8 @@ import { FavoritesOutletContext } from "../../domain/tools/favorites-outlet-cont
 import { useMemo, useState } from "react";
 import { useDebouncedValue } from "../../../state-effects/hooks/useDebouncedValue";
 import { EmptyToolsPage } from "./EmptyToolsPage";
-import { Tool } from "../../domain/tools/tool";
 import { useFetch } from "../../../state-effects/hooks/useFetch";
+import { useToggle } from '../../../state-effects/hooks/useToggle';
 
 export const ToolsPage = () => {
   const { favoriteToolIds, toggleFavorite } =
@@ -21,9 +21,10 @@ export const ToolsPage = () => {
   const [searchText, setSearchText] = useState<string>("");
   const debouncedSearchText = useDebouncedValue(searchText, 500);
 
-
   const [category, setCategory] = useState<CategoryOption>("all");
   const [sort, setSort] = useState<SortOption>("name-asc");
+
+  const onlyFavorites = useToggle(false);
 
   const { data: tools, loading, error, execute } = useFetch(listTools);
 
@@ -38,13 +39,16 @@ export const ToolsPage = () => {
   }, [tools]);
 
   const filteredTools = useMemo(() => {
-    return filterAndSortTools({
+    const value = filterAndSortTools({
       tools: tools ?? [],
       query: debouncedSearchText,
       category,
       sort,
     });
-  }, [tools, debouncedSearchText, category, sort]);
+
+    if(!onlyFavorites.value) return value;
+    return value.filter((tool) => favoriteSet.has(tool.id));
+  }, [tools, debouncedSearchText, category, sort, onlyFavorites.value, favoriteSet]);
 
   return (
     <section className="tools-page">
@@ -63,6 +67,8 @@ export const ToolsPage = () => {
           onCategoryChange={setCategory}
           sort={sort}
           onSortChange={setSort}
+          onlyFavorites={onlyFavorites.value}
+          onOnlyFavoritesChanges ={onlyFavorites.set}
         />
       </header>
       {loading && <p>Carregando...</p>}

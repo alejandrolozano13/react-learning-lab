@@ -11,10 +11,10 @@ type ToggleApi = {
 export function useToggle(initial = false): ToggleApi {
     const [value, setValue] = useState<boolean>(initial);
 
-    const setOn = useCallback(() => setValue(true), []);
-    const setOff = useCallback(() => setValue(false), []);
-    const toggle = useCallback(() => setValue((v) => !v), []);
-    const set = useCallback((next: boolean) => setValue(next), []);
+    const setOn = useCallback(() => setValue(true), []); // lógica interna
+    const setOff = useCallback(() => setValue(false), []); // lógiica interna
+    const toggle = useCallback(() => setValue((v) => !v), []); // para ação do usuario
+    const set = useCallback((next: boolean) => setValue(next), []); // sincronização externa
 
     return { value, setOn, setOff, toggle, set };
 }

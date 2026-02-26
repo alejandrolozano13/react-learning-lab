@@ -5,6 +5,7 @@ import { CategoryOption } from "../../../domain/tools/CategoryOption";
 
 import { Input } from "../../../../../components/ui/input";
 import { NativeSelect } from "../../../../../components/ui/native-select";
+import { Switch } from "../../../../../components/ui/switch";
 
 type Props = {
   category: CategoryOption;
@@ -16,6 +17,9 @@ type Props = {
 
   searchText: string;
   onSearchTextChange: (value: string) => void;
+
+  onlyFavorites: boolean;
+  onOnlyFavoritesChanges: (value: boolean) => void;
 };
 
 export const ToolsFiltersBar = ({
@@ -26,6 +30,8 @@ export const ToolsFiltersBar = ({
   onCategoryChange,
   sort,
   onSortChange,
+  onlyFavorites,
+  onOnlyFavoritesChanges,
 }: Props) => {
   return (
     <div className="tools-page__filters">
@@ -56,6 +62,11 @@ export const ToolsFiltersBar = ({
           <option value="name-asc">Nome (A-Z)</option>
           <option value="name-desc">Nome (Z-A)</option>
         </NativeSelect>
+
+        <Switch
+          checked={onlyFavorites}
+          onCheckedChange={(checked) => onOnlyFavoritesChanges(checked)}
+        />
       </div>
     </div>
   );
