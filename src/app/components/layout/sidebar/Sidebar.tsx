@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
 
 export const Sidebar = () => {
@@ -6,18 +6,29 @@ export const Sidebar = () => {
     <aside className="sidebar">
       <ul>
         <li>
-          <Link to="/">Home</Link>
+          <NavLink to="/">Home</NavLink>
         </li>
         <li>
-          <Link to="/tools">Tools</Link>
+          <NavLink to="/tools">Tools</NavLink>
         </li>
         <li>
-          <Link to="/playground">Playground</Link>
+          <NavLink to="/playground">Playground</NavLink>
         </li>
         <li>
-          <Link to="/about">About</Link>
+          <NavLink to="/about">About</NavLink>
+        </li>
+        <hr />
+        <p>Módulo 2</p>
+        <li>
+          <NavLink to="/state-effects/effects-lab">Effects Lab</NavLink>
+        </li>
+        <li>
+          <NavLink to="/state-effects/tools-fetch-lab">Tools Fetch Lab</NavLink>
+        </li>
+        <li>
+          <NavLink to="/state-effects/race-condition-lab">Race condition Lab</NavLink>
         </li>
       </ul>
     </aside>
   );
-};
+}

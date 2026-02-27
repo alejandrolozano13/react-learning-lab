@@ -1,64 +1,53 @@
 import "./ToolsPage.css";
 
 import { filterAndSortTools } from "../../helpers/tools/filterAndSortTools";
-
 import type { SortOption } from "../../domain/tools/SortOption";
 import type { CategoryOption } from "../../domain/tools/CategoryOption";
-
-import { toolsMock } from "../../mock/tools.mock";
 import { ToolCard } from "../../components/tools/ToolCard";
 import { ToolsFiltersBar } from "./components/ToolsFiltersBar";
-
 import { useOutletContext } from "react-router-dom";
 import { FavoritesOutletContext } from "../../domain/tools/favorites-outlet-context";
 import { useMemo, useState } from "react";
-import { useDebouncedValue } from "./../../../../hooks/useDebouncedValue";
-
-type ToolsEmptyStateProps = {
-  onClear: () => void;
-};
-
-function ToolsEmptyState({ onClear }: ToolsEmptyStateProps) {
-  return (
-    <div className="tools-empty">
-      <h2>Nenhuma ferramenta encontrada</h2>
-      <p>Tente ajustar a busca, a categoria ou a ordenação.</p>
-
-      <button type="button" className="tools-empty__clear" onClick={onClear}>
-        Limpar filtros
-      </button>
-    </div>
-  );
-}
+import { useDebouncedValue } from "../../../state-effects/hooks/useDebouncedValue";
+import { EmptyToolsPage } from "./EmptyToolsPage";
+import { useToggle } from '../../../state-effects/hooks/useToggle';
+import { useTools } from "../../../state-effects/tools/hooks/useTools";
 
 export const ToolsPage = () => {
   const { favoriteToolIds, toggleFavorite } =
     useOutletContext<FavoritesOutletContext>();
+
+  const { tools, isLoading, error, reload } = useTools();
+
+  const [searchText, setSearchText] = useState<string>("");
+  const debouncedSearchText = useDebouncedValue(searchText, 500);
+
+  const [category, setCategory] = useState<CategoryOption>("all");
+  const [sort, setSort] = useState<SortOption>("name-asc");
+
+  const onlyFavorites = useToggle(false);
 
   const favoriteSet = useMemo(
     () => new Set(favoriteToolIds),
     [favoriteToolIds],
   );
 
-  const [searchText, setSearchText] = useState<string>("");
-  const [category, setCategory] = useState<CategoryOption>("all");
-  const [sort, setSort] = useState<SortOption>("name-asc");
-
-  const debouncedSearchText = useDebouncedValue(searchText, 500);
-
   const categories = useMemo(() => {
-    const unique = new Set(toolsMock.map((tool) => tool.category));
+    const unique = new Set((tools ?? []).map((tool) => tool.category));
     return Array.from(unique).sort();
-  }, []);
+  }, [tools]);
 
   const filteredTools = useMemo(() => {
-    return filterAndSortTools({
-      tools: toolsMock,
+    const value = filterAndSortTools({
+      tools: tools ?? [],
       query: debouncedSearchText,
       category,
       sort,
     });
-  }, [debouncedSearchText, category, sort]);
+
+    if(!onlyFavorites.value) return value;
+    return value.filter((tool) => favoriteSet.has(tool.id));
+  }, [tools, debouncedSearchText, category, sort, onlyFavorites.value, favoriteSet]);
 
   return (
     <section className="tools-page">
@@ -77,28 +66,44 @@ export const ToolsPage = () => {
           onCategoryChange={setCategory}
           sort={sort}
           onSortChange={setSort}
+          onlyFavorites={onlyFavorites.value}
+          onOnlyFavoritesChanges ={onlyFavorites.set}
         />
       </header>
+      {isLoading && <p>Carregando...</p>}
 
-      {filteredTools.length === 0 ? ( // EMPTY STATE
-        <ToolsEmptyState
-          onClear={() => {
-            setSearchText("");
-            setCategory("all");
-            setSort("name-asc");
-          }}
-        />
-      ) : (
-        <div className="tools-list">
-          {filteredTools.map((tool) => ( // LISTA COM TOOLS
-            <ToolCard
-              key={tool.id}
-              tool={tool}
-              isFavorite={favoriteSet.has(tool.id)}
-              onToggleFavorite={toggleFavorite}
-            />
-          ))}
+      {!isLoading && error && (
+        <div className="tools-error">
+          <p>{error}</p>
+          <button type="button" onClick={() => void reload()}>
+            Tentar novamente
+          </button>
         </div>
+      )}
+
+      {!isLoading && !error && (
+        <>
+          {filteredTools.length === 0 ? (
+            <EmptyToolsPage
+              onClear={() => {
+                setSearchText("");
+                setCategory("all");
+                setSort("name-asc");
+              }}
+            />
+          ) : (
+            <div className="tools-list">
+              {filteredTools.map((tool) => (
+                <ToolCard
+                  key={tool.id}
+                  tool={tool}
+                  isFavorite={favoriteSet.has(tool.id)}
+                  onToggleFavorite={toggleFavorite}
+                />
+              ))}
+            </div>
+          )}
+        </>
       )}
     </section>
   );
