@@ -15,13 +15,22 @@ export const appRouter = createBrowserRouter([
     element: <AppLayout />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: "tools", element: <ToolsPage /> },
-      { path: "tools/:id", element: <ToolsDetailPage /> },
+      {
+        path: "tools",
+        element: <ToolsPage />,
+        children: [
+          { index: true, element: <ToolsPage /> },
+          { path: ":toolId", element: <ToolsDetailPage /> },
+        ],
+      },
       { path: "playground", element: <PlaygroundPage /> },
       { path: "about", element: <AboutPage /> },
       { path: "state-effects/effects-lab", element: <EffectsLabPage /> },
       { path: "state-effects/tools-fetch-lab", element: <ToolsFetchLabPage /> },
-      { path: "state-effects/race-condition-lab", element: <RaceConditionLabPage /> },
+      {
+        path: "state-effects/race-condition-lab",
+        element: <RaceConditionLabPage />,
+      },
     ],
   },
   {

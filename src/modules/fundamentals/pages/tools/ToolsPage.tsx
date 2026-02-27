@@ -1,7 +1,6 @@
 import "./ToolsPage.css";
 
 import { filterAndSortTools } from "../../helpers/tools/filterAndSortTools";
-import { listTools } from "../../../state-effects/services/Effects/toolsService";
 import type { SortOption } from "../../domain/tools/SortOption";
 import type { CategoryOption } from "../../domain/tools/CategoryOption";
 import { ToolCard } from "../../components/tools/ToolCard";
@@ -11,12 +10,14 @@ import { FavoritesOutletContext } from "../../domain/tools/favorites-outlet-cont
 import { useMemo, useState } from "react";
 import { useDebouncedValue } from "../../../state-effects/hooks/useDebouncedValue";
 import { EmptyToolsPage } from "./EmptyToolsPage";
-import { useFetch } from "../../../state-effects/hooks/useFetch";
 import { useToggle } from '../../../state-effects/hooks/useToggle';
+import { useTools } from "../../../state-effects/tools/hooks/useTools";
 
 export const ToolsPage = () => {
   const { favoriteToolIds, toggleFavorite } =
     useOutletContext<FavoritesOutletContext>();
+
+  const { tools, isLoading, error, reload } = useTools();
 
   const [searchText, setSearchText] = useState<string>("");
   const debouncedSearchText = useDebouncedValue(searchText, 500);
@@ -25,8 +26,6 @@ export const ToolsPage = () => {
   const [sort, setSort] = useState<SortOption>("name-asc");
 
   const onlyFavorites = useToggle(false);
-
-  const { data: tools, loading, error, execute } = useFetch(listTools);
 
   const favoriteSet = useMemo(
     () => new Set(favoriteToolIds),
@@ -71,18 +70,18 @@ export const ToolsPage = () => {
           onOnlyFavoritesChanges ={onlyFavorites.set}
         />
       </header>
-      {loading && <p>Carregando...</p>}
+      {isLoading && <p>Carregando...</p>}
 
-      {!loading && error && (
+      {!isLoading && error && (
         <div className="tools-error">
-          <p>{error.message}</p>
-          <button type="button" onClick={() => void execute(listTools)}>
+          <p>{error}</p>
+          <button type="button" onClick={() => void reload()}>
             Tentar novamente
           </button>
         </div>
       )}
 
-      {!loading && !error && (
+      {!isLoading && !error && (
         <>
           {filteredTools.length === 0 ? (
             <EmptyToolsPage

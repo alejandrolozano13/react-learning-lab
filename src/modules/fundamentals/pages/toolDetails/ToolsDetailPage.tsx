@@ -8,6 +8,7 @@ import { getToolById } from "../../../state-effects/services/Effects/toolsServic
 import { useEffect } from "react";
 import { Tool } from "../../domain/tools/tool";
 import { useFetch } from "../../../state-effects/hooks/useFetch";
+import { useTools } from "../../../state-effects/tools/hooks/useTools";
 
 export const ToolsDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -15,11 +16,13 @@ export const ToolsDetailPage = () => {
   const { favoriteToolIds, toggleFavorite } =
     useOutletContext<FavoritesOutletContext>();
 
-  const { data: tool, loading, error, execute } = useFetch(getToolById, {
-    args: [id as string],
-    deps: [id],
-    enabled: !!id
-  });
+  const { tools, isLoading, error, reload } = useTools();
+
+  // const { data: tool, loading, error, execute } = useFetch(getToolById, {
+  //   args: [id as string],
+  //   deps: [id],
+  //   enabled: !!id
+  // });
 
   if (!id) {
     return (
@@ -30,7 +33,7 @@ export const ToolsDetailPage = () => {
     );
   }
 
-  if (loading)
+  if (isLoading)
     return (
       <section style={{ padding: 16 }}>
         <p>Carregando...</p>
@@ -41,10 +44,13 @@ export const ToolsDetailPage = () => {
     return (
       <section style={{ padding: 16 }}>
         <h1>Não foi possível carregar a ferramenta</h1>
-        <p>{error.message}</p>
+        <p>{error}</p>
 
         <div style={{ display: "flex", gap: 8 }}>
-          <button type="button" onClick={() => id && execute((options) => getToolById(id, options))}>
+          <button
+            type="button"
+            onClick={() => id && reload((options) => getToolById(id, options))}
+          >
             Tentar novamente
           </button>
 
