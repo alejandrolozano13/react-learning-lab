@@ -9,7 +9,6 @@ type Props = { children: ReactNode };
 
 const initialToolState: ToolsState = {
   tools: [],
-  byId: {},
   isLoading: false,
   error: null,
 };
@@ -33,13 +32,9 @@ export function ToolsProvider({ children }: Props) {
     );
   }, []);
 
-  const reloadTool = useCallback(async (id: string) => {
-    dispatch(toolsActions.)
-  });
-
   useEffect(() => {
-    void reload();
-  }, [reload]);
+    void reloadList();
+  }, [reloadList]);
 
   return (
     <ToolsContext.Provider
@@ -48,7 +43,6 @@ export function ToolsProvider({ children }: Props) {
         isLoading: state.isLoading,
         error: state.error,
         reloadList,
-        reloadTool
       }}
     >
       {children}

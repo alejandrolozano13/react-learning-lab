@@ -17,7 +17,7 @@ export const ToolsPage = () => {
   const { favoriteToolIds, toggleFavorite } =
     useOutletContext<FavoritesOutletContext>();
 
-  const { tools, isLoading, error, reload } = useTools();
+  const { tools, isLoading, error, reloadList } = useTools();
 
   const [searchText, setSearchText] = useState<string>("");
   const debouncedSearchText = useDebouncedValue(searchText, 500);
@@ -75,7 +75,7 @@ export const ToolsPage = () => {
       {!isLoading && error && (
         <div className="tools-error">
           <p>{error}</p>
-          <button type="button" onClick={() => void reload()}>
+          <button type="button" onClick={() => void reloadList()}>
             Tentar novamente
           </button>
         </div>

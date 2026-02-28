@@ -8,6 +8,7 @@ import { AboutPage } from "../../modules/fundamentals/pages/about/AboutPage";
 import { EffectsLabPage } from "../../modules/state-effects/pages/Effects/EffectsLabPage";
 import { ToolsFetchLabPage } from "../../modules/state-effects/pages/Effects/ToolsFetchLabPage";
 import { RaceConditionLabPage } from "../../modules/state-effects/pages/Effects/RaceConditionLabPage";
+import { ToolsLayout } from "../../modules/fundamentals/pages/tools/ToolsLayout";
 
 export const appRouter = createBrowserRouter([
   {
@@ -17,7 +18,7 @@ export const appRouter = createBrowserRouter([
       { index: true, element: <HomePage /> },
       {
         path: "tools",
-        element: <ToolsPage />,
+        element: <ToolsLayout />,
         children: [
           { index: true, element: <ToolsPage /> },
           { path: ":toolId", element: <ToolsDetailPage /> },

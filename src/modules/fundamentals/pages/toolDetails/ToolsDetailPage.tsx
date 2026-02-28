@@ -5,26 +5,21 @@ import { ToolHeaderDetail } from "./components/ToolHeaderDetail";
 import { ToolDescription } from "./components/ToolDescription";
 import { ToolTags } from "./components/ToolTags";
 import { getToolById } from "../../../state-effects/services/Effects/toolsService";
-import { useEffect } from "react";
-import { Tool } from "../../domain/tools/tool";
 import { useFetch } from "../../../state-effects/hooks/useFetch";
-import { useTools } from "../../../state-effects/tools/hooks/useTools";
 
 export const ToolsDetailPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { toolId } = useParams<{ toolId: string }>();
 
   const { favoriteToolIds, toggleFavorite } =
     useOutletContext<FavoritesOutletContext>();
 
-  const { tools, isLoading, error, reload } = useTools();
+  const { data: tool, loading, error, execute } = useFetch(getToolById, {
+    args: [toolId as string],
+    deps: [toolId],
+    enabled: !!toolId,
+  });
 
-  // const { data: tool, loading, error, execute } = useFetch(getToolById, {
-  //   args: [id as string],
-  //   deps: [id],
-  //   enabled: !!id
-  // });
-
-  if (!id) {
+  if (!toolId) {
     return (
       <section style={{ padding: 16 }}>
         <h1>ID inválido</h1>
@@ -33,7 +28,7 @@ export const ToolsDetailPage = () => {
     );
   }
 
-  if (isLoading)
+  if (loading)
     return (
       <section style={{ padding: 16 }}>
         <p>Carregando...</p>
@@ -44,12 +39,14 @@ export const ToolsDetailPage = () => {
     return (
       <section style={{ padding: 16 }}>
         <h1>Não foi possível carregar a ferramenta</h1>
-        <p>{error}</p>
+        <p>{error.message}</p>
 
         <div style={{ display: "flex", gap: 8 }}>
           <button
             type="button"
-            onClick={() => id && reload((options) => getToolById(id, options))}
+            onClick={() =>
+              void execute((options) => getToolById(toolId, options))
+            }
           >
             Tentar novamente
           </button>

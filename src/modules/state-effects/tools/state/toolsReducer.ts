@@ -8,10 +8,12 @@ export function toolsReducer(state: ToolsState, action: Actions): ToolsState {
       return { ...state, isLoading: true, error: null };
 
     case ToolsActionTypes.LOAD_SUCCESS:
-      return { ...state, isLoading: false, tools: action.payload.tools };
-
-    case ToolsActionTypes.UPSERT_TOOL:
-      return {  }
+      return {
+        ...state,
+        isLoading: false,
+        error: null,
+        tools: action.payload.tools,
+      };
 
     case ToolsActionTypes.LOAD_ERROR:
       return { ...state, isLoading: false, error: action.payload.message };
