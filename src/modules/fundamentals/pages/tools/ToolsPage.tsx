@@ -7,17 +7,26 @@ import { ToolCard } from "../../components/tools/ToolCard";
 import { ToolsFiltersBar } from "./components/ToolsFiltersBar";
 import { useOutletContext } from "react-router-dom";
 import { FavoritesOutletContext } from "../../domain/tools/favorites-outlet-context";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDebouncedValue } from "../../../state-effects/hooks/useDebouncedValue";
 import { EmptyToolsPage } from "./EmptyToolsPage";
-import { useToggle } from '../../../state-effects/hooks/useToggle';
+import { useToggle } from "../../../state-effects/hooks/useToggle";
 import { useTools } from "../../../state-effects/tools/hooks/useTools";
 
 export const ToolsPage = () => {
   const { favoriteToolIds, toggleFavorite } =
     useOutletContext<FavoritesOutletContext>();
 
-  const { tools, isLoading, error, reloadList } = useTools();
+  const {
+    tools,
+    listLoading: isLoading,
+    listError: error,
+    reloadList,
+  } = useTools();
+
+  useEffect(() => {
+    void reloadList();
+  }, [reloadList]);
 
   const [searchText, setSearchText] = useState<string>("");
   const debouncedSearchText = useDebouncedValue(searchText, 500);
@@ -45,9 +54,16 @@ export const ToolsPage = () => {
       sort,
     });
 
-    if(!onlyFavorites.value) return value;
+    if (!onlyFavorites.value) return value;
     return value.filter((tool) => favoriteSet.has(tool.id));
-  }, [tools, debouncedSearchText, category, sort, onlyFavorites.value, favoriteSet]);
+  }, [
+    tools,
+    debouncedSearchText,
+    category,
+    sort,
+    onlyFavorites.value,
+    favoriteSet,
+  ]);
 
   return (
     <section className="tools-page">
@@ -67,7 +83,7 @@ export const ToolsPage = () => {
           sort={sort}
           onSortChange={setSort}
           onlyFavorites={onlyFavorites.value}
-          onOnlyFavoritesChanges ={onlyFavorites.set}
+          onOnlyFavoritesChanges={onlyFavorites.set}
         />
       </header>
       {isLoading && <p>Carregando...</p>}

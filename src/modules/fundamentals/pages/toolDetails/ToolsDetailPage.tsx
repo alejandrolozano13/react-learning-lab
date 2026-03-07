@@ -4,8 +4,8 @@ import { FavoritesOutletContext } from "../../domain/tools/favorites-outlet-cont
 import { ToolHeaderDetail } from "./components/ToolHeaderDetail";
 import { ToolDescription } from "./components/ToolDescription";
 import { ToolTags } from "./components/ToolTags";
-import { getToolById } from "../../../state-effects/services/Effects/toolsService";
-import { useFetch } from "../../../state-effects/hooks/useFetch";
+import { useTools } from "../../../state-effects/tools/hooks/useTools";
+import { useEffect } from "react";
 
 export const ToolsDetailPage = () => {
   const { toolId } = useParams<{ toolId: string }>();
@@ -13,11 +13,25 @@ export const ToolsDetailPage = () => {
   const { favoriteToolIds, toggleFavorite } =
     useOutletContext<FavoritesOutletContext>();
 
-  const { data: tool, loading, error, execute } = useFetch(getToolById, {
-    args: [toolId as string],
-    deps: [toolId],
-    enabled: !!toolId,
-  });
+  const {
+    selectedTool: tool,
+    detailLoading: loading,
+    detailError: error,
+    loadToolById,
+    clearSelectedTool,
+  } = useTools();
+
+  useEffect(() => {
+    if (!toolId) return;
+    const controller = new AbortController();
+
+    void loadToolById(toolId, { signal: controller.signal });
+
+    return () => {
+      controller.abort();
+      clearSelectedTool();
+    };
+  }, [toolId, loadToolById, clearSelectedTool]);
 
   if (!toolId) {
     return (
@@ -39,15 +53,10 @@ export const ToolsDetailPage = () => {
     return (
       <section style={{ padding: 16 }}>
         <h1>Não foi possível carregar a ferramenta</h1>
-        <p>{error.message}</p>
+        <p>{error}</p>
 
         <div style={{ display: "flex", gap: 8 }}>
-          <button
-            type="button"
-            onClick={() =>
-              void execute((options) => getToolById(toolId, options))
-            }
-          >
+          <button type="button" onClick={() => void loadToolById(toolId)}>
             Tentar novamente
           </button>
 

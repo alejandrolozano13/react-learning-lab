@@ -4,19 +4,49 @@ import { ToolsActionTypes } from "./toolsActions";
 
 export function toolsReducer(state: ToolsState, action: Actions): ToolsState {
   switch (action.type) {
-    case ToolsActionTypes.LOAD_START:
-      return { ...state, isLoading: true, error: null };
+    case ToolsActionTypes.LIST_LOAD_START:
+      return { ...state, listLoading: true, listError: null };
 
-    case ToolsActionTypes.LOAD_SUCCESS:
+    case ToolsActionTypes.LIST_LOAD_SUCCESS:
       return {
         ...state,
-        isLoading: false,
-        error: null,
+        listLoading: false,
+        listError: null,
         tools: action.payload.tools,
       };
 
-    case ToolsActionTypes.LOAD_ERROR:
-      return { ...state, isLoading: false, error: action.payload.message };
+    case ToolsActionTypes.LIST_LOAD_ERROR:
+      return {
+        ...state,
+        listLoading: false,
+        listError: action.payload.message,
+      };
+
+    case ToolsActionTypes.DETAIL_LOAD_START:
+      return { ...state, detailLoading: true, detailError: null };
+
+    case ToolsActionTypes.DETAIL_LOAD_SUCCESS:
+      return {
+        ...state,
+        detailLoading: false,
+        detailError: null,
+        selectedTool: action.payload.tool,
+      };
+
+    case ToolsActionTypes.DETAIL_LOAD_ERROR:
+      return {
+        ...state,
+        detailLoading: false,
+        detailError: action.payload.message,
+      };
+
+    case ToolsActionTypes.DETAIL_CLEAR:
+      return {
+        ...state,
+        detailLoading: false,
+        selectedTool: null,
+        detailError: null,
+      }
 
     default:
       return state;
