@@ -71,7 +71,7 @@ export async function getToolById(
   return { ok: true, data: result.data };
 }
 
-export async function createTool(
+export async function add(
   input: CreateToolInput,
   options: RequestOptions = {},
 ): Promise<Result<Tool>> {
@@ -114,7 +114,7 @@ export async function createTool(
   );
 }
 
-export async function updateTool(
+export async function update(
   id: string,
   patch: UpdateToolInput,
   options: RequestOptions = {},
@@ -141,7 +141,7 @@ export async function updateTool(
   );
 }
 
-export async function deleteTool(
+export async function remove(
   id: string,
   options: RequestOptions = {}
 ): Promise<Result<{id: string}>> {
