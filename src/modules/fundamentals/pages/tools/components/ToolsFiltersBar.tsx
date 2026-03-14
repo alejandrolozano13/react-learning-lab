@@ -63,10 +63,14 @@ export const ToolsFiltersBar = ({
           <option value="name-desc">Nome (Z-A)</option>
         </NativeSelect>
 
-        <Switch
-          checked={onlyFavorites}
-          onCheckedChange={(checked) => onOnlyFavoritesChanges(checked)}
-        />
+        <div className="flex items-center gap-2">
+          <Switch
+            checked={onlyFavorites}
+            onCheckedChange={(checked) => onOnlyFavoritesChanges(checked)}
+          />
+
+          <span>Somente favoritos</span>
+        </div>
       </div>
     </div>
   );

@@ -12,6 +12,7 @@ import { useDebouncedValue } from "../../../state-effects/hooks/useDebouncedValu
 import { EmptyToolsPage } from "./EmptyToolsPage";
 import { useToggle } from "../../../state-effects/hooks/useToggle";
 import { useTools } from "../../../state-effects/tools/hooks/useTools";
+import { AccordionFilter } from "../../../../components/ui/accordion-filter";
 
 export const ToolsPage = () => {
   const { favoriteToolIds, toggleFavorite } =
@@ -74,18 +75,21 @@ export const ToolsPage = () => {
           workflow. Click on any tool to explore and get started.
         </p>
 
-        <ToolsFiltersBar
-          searchText={searchText}
-          onSearchTextChange={setSearchText}
-          category={category}
-          categories={categories}
-          onCategoryChange={setCategory}
-          sort={sort}
-          onSortChange={setSort}
-          onlyFavorites={onlyFavorites.value}
-          onOnlyFavoritesChanges={onlyFavorites.set}
-        />
+        <AccordionFilter title="Filtros" className="mt-4">
+          <ToolsFiltersBar
+            searchText={searchText}
+            onSearchTextChange={setSearchText}
+            category={category}
+            categories={categories}
+            onCategoryChange={setCategory}
+            sort={sort}
+            onSortChange={setSort}
+            onlyFavorites={onlyFavorites.value}
+            onOnlyFavoritesChanges={onlyFavorites.set}
+          />
+        </AccordionFilter>
       </header>
+
       {isLoading && <p>Carregando...</p>}
 
       {!isLoading && error && (
