@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Button } from "../../../../../components/ui/button";
 
 export type ToolFormValues = {
   name: string;
@@ -61,24 +62,84 @@ export function ToolForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex h-full flex-col">
-        <div className="space-y-6">
-            <div className="spacey-2">
-                <label htmlFor="tool-name" className="text-sm font-medium">
-                    Nome da ferramente
-                </label>
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <label htmlFor="tool-name" className="text-sm font-medium">
+            Nome da ferramente
+          </label>
 
-                <input
-                    id="tool-name"
-                    type="text"
-                    value={values.name}
-                    onChange={(event) => updateField("name", event.target.value)}
-                    placeholder="Ex: React Router"
-                    className="h-11 w-full rounded-xl border border-border px-4 outline-none"
-                />
-            </div>
+          <input
+            id="tool-name"
+            type="text"
+            value={values.name}
+            onChange={(event) => updateField("name", event.target.value)}
+            placeholder="Ex: React Router"
+            className="h-11 w-full rounded-xl border border-border px-4 outline-none"
+          />
         </div>
+
+        <div className="space-y-2">
+          <label htmlFor="tool-description" className="text-sm font-medium">
+            Descrição
+          </label>
+
+          <textarea
+            id="tool-description"
+            value={values.description}
+            onChange={(event) => updateField("description", event.target.value)}
+            placeholder="Insira uma breve descrição sobre a ferramenta..."
+            className="min-h-32 w-full rounded-xl border px-4 py-3 text-sm outline-none"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="tool-category" className="text-sm font-medium">
+            Categoria
+          </label>
+          <select
+            id="tool-category"
+            value={values.category}
+            onChange={(event) =>
+              updateField(
+                "category",
+                event.target.value as ToolFormValues["category"],
+              )
+            }
+            className="h-11 w-full rounded-xl border px-4 text-sm outline-none"
+          >
+            <option value="dev">Dev</option>
+            <option value="ui">UI</option>
+            <option value="utils">Utils</option>
+            <option value="testing">Testing</option>
+          </select>
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="tool-tags" className="text-sm font-medium">
+            Tags
+          </label>
+          <input
+            id="tool-tags"
+            type="text"
+            value={tagsInput}
+            onChange={(event) => setTagsInput(event.target.value)}
+            placeholder="Digite e separe por vírgula"
+            className="h-11 w-full rounded-xl border px-4 text-sm outline none"
+          />
+        </div>
+      </div>
+
+      <footer className="mt-8 border-t border-black/10 pt-4">
+        <Button
+          type="submit"
+          disabled={loading}
+          className="h-11 w-full rounded-xl bg-emerald-700 text-white hover:bg-emerald-600"
+        >
+          {loading ? "Salvando" : submitLabel}
+        </Button>
+      </footer>
     </form>
-  )
+  );
 }
 
 /**

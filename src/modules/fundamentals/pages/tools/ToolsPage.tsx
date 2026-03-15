@@ -13,6 +13,11 @@ import { EmptyToolsPage } from "./EmptyToolsPage";
 import { useToggle } from "../../../state-effects/hooks/useToggle";
 import { useTools } from "../../../state-effects/tools/hooks/useTools";
 import { AccordionFilter } from "../../../../components/ui/accordion-filter";
+import { Tool } from "../../domain/tools/tool";
+import { ToolFormValues } from "./components/ToolForm";
+import { ToolFormPage } from "./components/ToolFormPage";
+
+type FormMode = "create" | "edit";
 
 export const ToolsPage = () => {
   const { favoriteToolIds, toggleFavorite } =
@@ -23,6 +28,11 @@ export const ToolsPage = () => {
     listLoading: isLoading,
     listError: error,
     reloadList,
+    mutationLoading,
+    mutationError,
+    createTool,
+    updateTool,
+    deleteTool,
   } = useTools();
 
   useEffect(() => {
@@ -36,6 +46,10 @@ export const ToolsPage = () => {
   const [sort, setSort] = useState<SortOption>("name-asc");
 
   const onlyFavorites = useToggle(false);
+
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [formMode, setFormMode] = useState<FormMode>("create");
+  const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
 
   const favoriteSet = useMemo(
     () => new Set(favoriteToolIds),
@@ -66,6 +80,34 @@ export const ToolsPage = () => {
     favoriteSet,
   ]);
 
+  const handleOpenCreate = () => {
+    setFormMode("create");
+    setSelectedTool(null);
+    setIsFormOpen(true);
+  };
+
+  const handleOpenEdit = (tool: Tool) => {
+    setFormMode("edit");
+    setSelectedTool(tool);
+    setIsFormOpen(true);
+  };
+
+  const handleCloseForm = () => {
+    setIsFormOpen(false);
+    setSelectedTool(null);
+  };
+
+  const handleSubmitForm = async (values: ToolFormValues) => {
+    if (formMode === "create") await createTool(values);
+    if (formMode === "edit" && selectedTool)
+      await updateTool(selectedTool.id, values);
+    handleCloseForm();
+  };
+
+  const handleDelete = async (tool: Tool) => {
+    await deleteTool(tool.id);
+  };
+
   return (
     <section className="tools-page">
       <header className="tools-page__header">
@@ -88,6 +130,16 @@ export const ToolsPage = () => {
             onOnlyFavoritesChanges={onlyFavorites.set}
           />
         </AccordionFilter>
+
+        <div className="mt-4">
+          <button
+            type="button"
+            onClick={handleOpenCreate}
+            className="rounded-xl bg-emerald-700 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-600"
+          >
+            Criar ferramenta
+          </button>
+        </div>
       </header>
 
       {isLoading && <p>Carregando...</p>}
@@ -125,6 +177,18 @@ export const ToolsPage = () => {
           )}
         </>
       )}
+
+      <ToolFormPage
+        open={isFormOpen}
+        mode={formMode}
+        initialValues={selectedTool ?? undefined}
+        loading={mutationLoading}
+        error={mutationError}
+        onClose={handleCloseForm}
+        onSubmit={(values) => {
+          void handleSubmitForm(values);
+        }}
+      />
     </section>
   );
 };

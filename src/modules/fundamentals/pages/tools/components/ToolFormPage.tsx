@@ -22,7 +22,7 @@ export function ToolFormPage({
   onClose,
   onSubmit,
 }: ToolFormPageProps) {
-  if (!open) return;
+  if (!open) return null;
 
   const title = mode === "create" ? "Criar ferramenta" : "Editar ferramenta";
   const submitLabel = mode === "create" ? "Criar" : "Editar";
