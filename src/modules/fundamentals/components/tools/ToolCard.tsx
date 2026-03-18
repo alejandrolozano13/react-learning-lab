@@ -2,6 +2,8 @@ import "./ToolCard.css";
 import { Link } from "react-router-dom";
 import type { Tool } from "../../domain/tools/tool";
 import { FavoriteButton } from "../../../../components/ui/favorite-button";
+import { EditButton } from "../../../../components/ui/edit-button";
+import { DeleteButton } from "../../../../components/ui/delete-button";
 import { ToolIcon } from "./ToolIcon";
 import { ToolCategoryBadge } from "./ToolCategoryBadge";
 
@@ -9,9 +11,17 @@ type Props = {
   tool: Tool;
   isFavorite: boolean;
   onToggleFavorite: (toolId: string) => void;
+  onEdit: (tool: Tool) => void;
+  onDelete: (tool: Tool) => void;
 };
 
-export function ToolCard({ tool, isFavorite, onToggleFavorite }: Props) {
+export function ToolCard({
+  tool,
+  isFavorite,
+  onToggleFavorite,
+  onEdit,
+  onDelete,
+}: Props) {
   return (
     <article className="tool-card">
       <ToolIcon toolId={tool.id} />
@@ -31,6 +41,9 @@ export function ToolCard({ tool, isFavorite, onToggleFavorite }: Props) {
       </div>
 
       <div className="tool-card__actions">
+        <EditButton onEdit={() => onEdit(tool)} />
+        <DeleteButton onDelete={() => onDelete(tool)} />
+
         <FavoriteButton
           isFavorite={isFavorite}
           onToggle={() => onToggleFavorite(tool.id)}

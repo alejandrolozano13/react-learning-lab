@@ -173,6 +173,8 @@ export const ToolsPage = () => {
                   tool={tool}
                   isFavorite={favoriteSet.has(tool.id)}
                   onToggleFavorite={toggleFavorite}
+                  onEdit={handleOpenEdit}
+                  onDelete={handleDelete}
                 />
               ))}
             </div>
