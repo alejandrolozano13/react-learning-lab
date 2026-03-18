@@ -35,7 +35,7 @@ export function ToolFormPage({
         aria-hidden="true"
       />
 
-      <aside className="absolute inset-y-0 right-0 flex w-full max-w-md flex-col border-l">
+      <aside className="absolute inset-y-0 right-0 w-full max-w-md flex flex-col border-l bg-white">
         <header className="flex items-center justify-between border-b px-6 py-4">
           <h2 className="text-xl font-semibold">{title}</h2>
 
@@ -49,20 +49,20 @@ export function ToolFormPage({
           </button>
         </header>
 
-        <div className="flex-1 overflow-y-auto px-6 py-6">
-          {error ? (
-            <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
-              {error}
-            </div>
-          ) : null}
+        {error ? (
+          <div className="ml-4 mr-4 mt-4 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+            {error}
+          </div>
+        ) : null}
+        
+        <div className="flex-1 px-6 py-6">
+          <ToolForm
+            initialValues={initialValues}
+            onSubmit={onSubmit}
+            submitLabel={submitLabel}
+            loading={loading}
+          />
         </div>
-
-        <ToolForm
-          initialValues={initialValues}
-          onSubmit={onSubmit}
-          submitLabel={submitLabel}
-          loading={loading}
-        />
       </aside>
     </div>
   );
@@ -92,7 +92,7 @@ export function ToolFormPage({
  * ! w-100%: Colocamos que a página tem um width de 100%.
  * ! max-w-md (Max-width): O máximo que a página lateral pode ocupar (lembrando que o md representa a escala de tamanhos no tailwind, ex: md: 448px e 2xl: 672px).
  * ! border-l (Border-left): Significa que a borda lateral da esqueda já foi definida com 1px solid, dando a entender a separação da página de listagem da nossa lateral.
- * 
+ *
  * ! 4. Header (Área header da nossa página lateral).
  * ! flex: ativando flexbox.
  * ! items-center: alinhando o conteúdo verticalmente (Título e botão x).
@@ -100,7 +100,7 @@ export function ToolFormPage({
  * ! border-b: Definindo a borda de limitação do nosso header, com 1px solid, e separando visualmente o contéudo do form da página lateral do nosso header.
  * ! px-6: Padding horizontal (left e right -- eixo x) de 1.5rem. (Lembrando que o 6 é a escala de medidas do tailwind).
  * ! py-4: Padding vertical (top e bottom -- eixo y) de 1rem. (Lembrando que o 4 é a escala de medidas do tailwind).
- * 
+ *
  * ! 5. Título (Titulo do nosso header -- página lateral).
  * ! text-xl: definindo o tamanho da fonte (xl = 20px).
  * ! font-semibold: peso 600 no text.
@@ -116,12 +116,12 @@ export function ToolFormPage({
  * ! transition: Ativando animação suave para quando mouse passar encima.
  * ! hover:bg-white/5: Quando o mouse passar encima do botão o background é preto e com opacity de 5%.
  * ! hover:text-white: Quando o mouse passar encima do botão o ícone ao invés de ser cinza fica preto.
- * 
+ *
  * ! 7. Conteúdo da nossa página lateral.
  * ! flex-1: O conteúdo da nossa página lateral deve ocupar todo o espaço restante da nossa tela lateral (flex-grow: 1).
  * ! overflow-y-auto: Isso serve para proteger nossa página lateral, garantindo que se o conteúdo crescer demais será colocado um scroll para navegar por ele.
  * ! px-6 e py-6: Padding horizontal e vertical de 1.5rem.
- * 
+ *
  * ! 8. Modal de erro:
  * ! mb-4: margin-bottom = 1rem.
  * ! rounded-xl: Bordas arrendondadas.

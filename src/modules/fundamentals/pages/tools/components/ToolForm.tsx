@@ -61,9 +61,9 @@ export function ToolForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex h-full flex-col">
+    <form onSubmit={handleSubmit} className="flex flex-col min-h-full">
       <div className="space-y-6">
-        <div className="space-y-2">
+        <div className="space-y-2 flex-1">
           <label htmlFor="tool-name" className="text-sm font-medium">
             Nome da ferramente
           </label>
@@ -78,7 +78,7 @@ export function ToolForm({
           />
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2 flex-1">
           <label htmlFor="tool-description" className="text-sm font-medium">
             Descrição
           </label>
@@ -92,7 +92,7 @@ export function ToolForm({
           />
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2 flex-1">
           <label htmlFor="tool-category" className="text-sm font-medium">
             Categoria
           </label>
@@ -114,7 +114,7 @@ export function ToolForm({
           </select>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2 flex-1">
           <label htmlFor="tool-tags" className="text-sm font-medium">
             Tags
           </label>
@@ -129,7 +129,7 @@ export function ToolForm({
         </div>
       </div>
 
-      <footer className="mt-8 border-t border-black/10 pt-4">
+      <footer className="mt-auto border-t border-black/10 pt-4 ml-2 mr-2">
         <Button
           type="submit"
           disabled={loading}

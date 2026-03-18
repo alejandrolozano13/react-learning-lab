@@ -71,43 +71,6 @@ export function toolsReducer(state: ToolsState, action: Actions): ToolsState {
         mutationError: action.payload.message,
       };
 
-    case ToolsActionTypes.CREATE_SUCCESS:
-      return {
-        ...state,
-        mutationType: null,
-        mutationLoading: false,
-        mutationError: null,
-        tools: [action.payload.tool, ...state.tools],
-      };
-
-    case ToolsActionTypes.UPDATE_SUCCESS:
-      return {
-        ...state,
-        mutationType: null,
-        mutationLoading: false,
-        mutationError: null,
-        tools: state.tools.map((tool) =>
-          tool.id === action.payload.tool.id ? action.payload.tool : tool,
-        ),
-        selectedTool:
-          state.selectedTool?.id === action.payload.tool.id
-            ? action.payload.tool
-            : state.selectedTool,
-      };
-
-    case ToolsActionTypes.DELETE_SUCCESS:
-      return {
-        ...state,
-        mutationType: null,
-        mutationLoading: false,
-        mutationError: null,
-        tools: state.tools.filter((t) => t.id !== action.payload.id),
-        selectedTool:
-          state.selectedTool?.id === action.payload.id
-            ? null
-            : state.selectedTool,
-      };
-
     default:
       return state;
   }

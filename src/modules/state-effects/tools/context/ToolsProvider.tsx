@@ -79,7 +79,8 @@ export function ToolsProvider({ children }: Props) {
       const result = await add(input, options);
 
       if (result.ok) {
-        dispatch(toolsActions.createSuccess(result.data));
+        await reloadList();
+        dispatch(toolsActions.mutationClear());
         return;
       }
 
@@ -94,7 +95,7 @@ export function ToolsProvider({ children }: Props) {
         ),
       );
     },
-    [],
+    [reloadList],
   );
 
   const updateTool = useCallback(
@@ -104,7 +105,8 @@ export function ToolsProvider({ children }: Props) {
       const result = await update(id, patch, options);
 
       if (result.ok) {
-        dispatch(toolsActions.updateSuccess(result.data));
+        await reloadList();
+        dispatch(toolsActions.mutationClear());
         return;
       }
 
@@ -119,7 +121,7 @@ export function ToolsProvider({ children }: Props) {
         ),
       );
     },
-    [],
+    [reloadList],
   );
 
   const deleteTool = useCallback(
@@ -129,7 +131,8 @@ export function ToolsProvider({ children }: Props) {
       const result = await remove(id, options);
 
       if (result.ok) {
-        dispatch(toolsActions.deleteSuccess(result.data.id));
+        await reloadList();
+        dispatch(toolsActions.mutationClear());
         return;
       }
 
@@ -144,7 +147,7 @@ export function ToolsProvider({ children }: Props) {
         ),
       );
     },
-    [],
+    [reloadList],
   );
 
   const clearMutationState = useCallback(() => {

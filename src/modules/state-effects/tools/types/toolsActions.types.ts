@@ -30,18 +30,6 @@ export type Actions =
   | {
       type: typeof ToolsActionTypes.MUTATION_ERROR;
       payload: { message: string };
-    }
-  | {
-      type: typeof ToolsActionTypes.CREATE_SUCCESS;
-      payload: { tool: Tool };
-    }
-  | {
-      type: typeof ToolsActionTypes.UPDATE_SUCCESS;
-      payload: { tool: Tool };
-    }
-  | {
-      type: typeof ToolsActionTypes.DELETE_SUCCESS;
-      payload: { id: string };
     };
 
 export const toolsActions = {
@@ -89,20 +77,5 @@ export const toolsActions = {
   mutationError: (message: string): Actions => ({
     type: ToolsActionTypes.MUTATION_ERROR,
     payload: { message },
-  }),
-
-  createSuccess: (tool: Tool): Actions => ({
-    type: ToolsActionTypes.CREATE_SUCCESS,
-    payload: { tool },
-  }),
-
-  updateSuccess: (tool: Tool): Actions => ({
-    type: ToolsActionTypes.UPDATE_SUCCESS,
-    payload: { tool },
-  }),
-
-  deleteSuccess: (id: string): Actions => ({
-    type: ToolsActionTypes.DELETE_SUCCESS,
-    payload: { id },
   }),
 } as const;

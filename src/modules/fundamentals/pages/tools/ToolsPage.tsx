@@ -33,6 +33,7 @@ export const ToolsPage = () => {
     createTool,
     updateTool,
     deleteTool,
+    clearMutationState
   } = useTools();
 
   useEffect(() => {
@@ -93,6 +94,7 @@ export const ToolsPage = () => {
   };
 
   const handleCloseForm = () => {
+    clearMutationState();
     setIsFormOpen(false);
     setSelectedTool(null);
   };

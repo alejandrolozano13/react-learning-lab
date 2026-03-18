@@ -25,7 +25,11 @@ export async function listTools(
   options: Options = {},
 ): Promise<Result<Tool[]>> {
   return withRetry(
-    () => mockRequest(() => toolsMock, { signal: options.signal }),
+    () =>
+      mockRequest(
+        () => toolsMock.map((tool) => ({ ...tool })),
+        { signal: options.signal },
+      ),
     { attempts: 3, baseDelayMs: 250, signal: options.signal },
   );
 }
