@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { Button } from "../../../../../components/ui/button";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export type ToolFormValues = {
   name: string;
@@ -24,44 +27,61 @@ const defaultValues: ToolFormValues = {
   isFavorite: false,
 };
 
+const toolFormSchema = z.object({
+  name: z.string().trim().min(1, "O nome é obrigatório"),
+
+  description: z
+    .string()
+    .trim()
+    .min(1, "A descrição da ferramenta é obrigatória"),
+
+  category: z.enum(["dev", "ui", "utils", "testing"]),
+
+  tags: z.string().transform((value) =>
+    value
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter(Boolean),
+  ),
+});
+
+type ToolFormInput = z.input<typeof toolFormSchema>;
+type ToolFormData = z.output<typeof toolFormSchema>;
+
 export function ToolForm({
   initialValues,
   loading = false,
   submitLabel,
   onSubmit,
 }: ToolFormProps) {
-  const [values, setValues] = useState<ToolFormValues>({
+  const resolvedInitialValues = {
     ...defaultValues,
     ...initialValues,
-  });
-
-  const [tagsInput, setTagsInput] = useState(values.tags.join(", "));
-
-  const updateField = <K extends keyof ToolFormValues>(
-    field: K,
-    value: ToolFormValues[K],
-  ) => {
-    setValues((current) => ({ ...current, [field]: value }));
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm<ToolFormInput, undefined, ToolFormData>({
+    resolver: zodResolver(toolFormSchema),
+  });
 
-    const normalizedTags = tagsInput
-      .split(",")
-      .map((tag) => tag.trim())
-      .filter(Boolean);
-
+  const submitChanges = (data: ToolFormData) => {
     onSubmit({
-      ...values,
-      name: values.name.trim(),
-      description: values.description.trim(),
-      tags: normalizedTags,
+      ...resolvedInitialValues,
+      ...data,
+      name: data.name.trim(),
+      description: data.description.trim(),
     });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col min-h-full">
+    <form
+      onSubmit={handleSubmit(submitChanges)}
+      className="flex flex-col min-h-full"
+    >
       <div className="space-y-6">
         <div className="space-y-2 flex-1">
           <label htmlFor="tool-name" className="text-sm font-medium">
@@ -71,11 +91,12 @@ export function ToolForm({
           <input
             id="tool-name"
             type="text"
-            value={values.name}
-            onChange={(event) => updateField("name", event.target.value)}
             placeholder="Ex: React Router"
             className="h-11 w-full rounded-xl border border-border px-4 outline-none"
+            {...register("name")}
           />
+
+          {errors.name && <span className="text-sm text-red-500">{errors.name.message}</span>}
         </div>
 
         <div className="space-y-2 flex-1">
@@ -85,47 +106,47 @@ export function ToolForm({
 
           <textarea
             id="tool-description"
-            value={values.description}
-            onChange={(event) => updateField("description", event.target.value)}
             placeholder="Insira uma breve descrição sobre a ferramenta..."
             className="min-h-32 w-full rounded-xl border px-4 py-3 text-sm outline-none"
+            {...register("description")}
           />
+
+          {errors.description && <span className="text-sm text-red-500">{errors.description.message}</span>}
         </div>
 
         <div className="space-y-2 flex-1">
           <label htmlFor="tool-category" className="text-sm font-medium">
             Categoria
           </label>
+
           <select
             id="tool-category"
-            value={values.category}
-            onChange={(event) =>
-              updateField(
-                "category",
-                event.target.value as ToolFormValues["category"],
-              )
-            }
             className="h-11 w-full rounded-xl border px-4 text-sm outline-none"
+            {...register("category")}
           >
             <option value="dev">Dev</option>
             <option value="ui">UI</option>
             <option value="utils">Utils</option>
             <option value="testing">Testing</option>
           </select>
+
+          {errors.category && <span className="text-sm text-red-500">{errors.category.message}</span>}
         </div>
 
         <div className="space-y-2 flex-1">
           <label htmlFor="tool-tags" className="text-sm font-medium">
             Tags
           </label>
+
           <input
             id="tool-tags"
             type="text"
-            value={tagsInput}
-            onChange={(event) => setTagsInput(event.target.value)}
             placeholder="Digite e separe por vírgula"
             className="h-11 w-full rounded-xl border px-4 text-sm outline none"
+            {...register("tags")}
           />
+
+          {errors.tags && <span className="text-sm text-red-500">{errors.tags.message}</span>}
         </div>
       </div>
 
