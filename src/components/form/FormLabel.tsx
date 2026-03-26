@@ -1,8 +1,14 @@
-type FormLabelProps = {
-  htmlFor: string;
-  children: React.ReactNode;
+import type { LabelHTMLAttributes, ReactNode } from "react";
+import { cn } from "../../lib/utils";
+
+type FormLabelProps = LabelHTMLAttributes<HTMLLabelElement> & {
+  children: ReactNode;
 };
 
-export function FormLabel({ htmlFor, children }: FormLabelProps) {
-  return <label htmlFor={htmlFor}>{children}</label>;
+export function FormLabel({ children, className, ...props }: FormLabelProps) {
+  return (
+    <label className={cn("text-sm font-medium", className)} {...props}>
+      {children}
+    </label>
+  );
 }
