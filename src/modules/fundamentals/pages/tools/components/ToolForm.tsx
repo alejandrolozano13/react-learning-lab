@@ -15,6 +15,7 @@ import {
 import { mapToolFormToValues } from "./tool-form.mapper";
 import type { ToolFormValues } from "./tool-form.types";
 import { FormControl } from "../../../../../components/form/FormControl";
+import { FormActions } from "../../../../../components/form/FormActions";
 
 type ToolFormProps = {
   initialValues?: Partial<ToolFormValues>;
@@ -52,11 +53,7 @@ export function ToolForm({
     },
   });
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = methods;
+  const { register, handleSubmit } = methods;
 
   const submitChanges = (data: ToolFormData) => {
     const values = mapToolFormToValues(data, resolvedInitialValues);
@@ -137,7 +134,7 @@ export function ToolForm({
         </FormField>
       </div>
 
-      <footer className="mt-auto border-t border-black/10 pt-4 ml-2 mr-2">
+      <FormActions className="ml-2 mr-2">
         <Button
           type="submit"
           disabled={loading}
@@ -145,7 +142,7 @@ export function ToolForm({
         >
           {loading ? "Salvando" : submitLabel}
         </Button>
-      </footer>
+      </FormActions>
     </Form>
   );
 }
