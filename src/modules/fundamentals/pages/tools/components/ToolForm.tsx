@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "../../../../../components/form/"; // assim ja pegamos automaticamente do index.ts no diretório apontado
-import { Button } from "../../../../../components/ui/button";
+import { Form } from "@/components/form";
+import { Button } from "@/components/ui/button";
 
 import {
   toolFormSchema,
@@ -77,7 +77,7 @@ export function ToolForm({
         <Form.Field>
           <Form.Label htmlFor="tool-description">Descrição</Form.Label>
 
-          <Form.Textarea<ToolFormInput>
+          <Form.Textarea
             id="tool-description"
             name="description"
             placeholder="Insira uma breve descrição sobre a ferramenta..."
@@ -88,7 +88,7 @@ export function ToolForm({
 
         <Form.Field>
           <Form.Label htmlFor="tool-category">Categoria</Form.Label>
-          <Form.Select<ToolFormInput> id="tool-category" name="category">
+          <Form.Select id="tool-category" name="category">
             <option value="dev">Dev</option>
             <option value="ui">UI</option>
             <option value="utils">Utils</option>
@@ -99,7 +99,7 @@ export function ToolForm({
 
         <Form.Field>
           <Form.Label htmlFor="tool-tags">Tags</Form.Label>
-          <Form.Input<ToolFormInput>
+          <Form.Input
             id="tool-tags"
             name="tags"
             placeholder="Digite e separe por vírgula"
