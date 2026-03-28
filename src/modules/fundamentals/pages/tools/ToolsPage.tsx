@@ -14,7 +14,7 @@ import { useToggle } from "../../../state-effects/hooks/useToggle";
 import { useTools } from "../../../state-effects/tools/hooks/useTools";
 import { AccordionFilter } from "../../../../components/ui/accordion-filter";
 import { Tool } from "../../domain/tools/tool";
-import { ToolFormValues } from "./components/ToolForm";
+import { ToolFormValues } from "./components/tool-form.types";
 import { ToolFormPage } from "./components/ToolFormPage";
 
 type FormMode = "create" | "edit";

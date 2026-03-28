@@ -28,6 +28,9 @@ export const Sidebar = () => {
         <li>
           <NavLink to="/state-effects/race-condition-lab">Race condition Lab</NavLink>
         </li>
+        <li>
+          <NavLink to="/permorfance/performance-lab">Permormance Lab</NavLink>
+        </li>
       </ul>
     </aside>
   );
