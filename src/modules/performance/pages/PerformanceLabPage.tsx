@@ -1,5 +1,8 @@
 import { RenderBadge } from "../components/RenderBadge";
 import { RenderCounterBasicsSection } from "../components/RenderCounterBasicsSection";
+import { UseCallbackSection } from "../components/UseCallbackSection";
+import { WithoutOptimizationSection } from "../components/WithoutOptimizationSection";
+import { WithReactMemoSection } from "../components/WithReactMemoSection";
 import { useRenderCount } from "../hooks/useRenderCount";
 
 export const PerformanceLabPage = () => {
@@ -40,7 +43,10 @@ export const PerformanceLabPage = () => {
         </p>
       </section>
 
-      <RenderCounterBasicsSection />
+      {/* <RenderCounterBasicsSection /> */}
+      {/* <WithoutOptimizationSection /> */}
+      {/* <WithReactMemoSection /> */}
+      <UseCallbackSection />
     </section>
   );
 };
