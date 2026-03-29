@@ -5,8 +5,6 @@ import type { SortOption } from "../../domain/tools/SortOption";
 import type { CategoryOption } from "../../domain/tools/CategoryOption";
 import { ToolCard } from "../../components/tools/ToolCard";
 import { ToolsFiltersBar } from "./components/ToolsFiltersBar";
-import { useOutletContext } from "react-router-dom";
-import { FavoritesOutletContext } from "../../domain/tools/favorites-outlet-context";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDebouncedValue } from "../../../state-effects/hooks/useDebouncedValue";
 import { EmptyToolsPage } from "./EmptyToolsPage";
@@ -20,9 +18,6 @@ import { ToolFormPage } from "./components/ToolFormPage";
 type FormMode = "create" | "edit";
 
 export const ToolsPage = () => {
-  const { favoriteToolIds, toggleFavorite } =
-    useOutletContext<FavoritesOutletContext>();
-
   const {
     tools,
     listLoading: isLoading,
@@ -33,7 +28,7 @@ export const ToolsPage = () => {
     createTool,
     updateTool,
     deleteTool,
-    clearMutationState
+    clearMutationState,
   } = useTools();
 
   useEffect(() => {
@@ -52,11 +47,6 @@ export const ToolsPage = () => {
   const [formMode, setFormMode] = useState<FormMode>("create");
   const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
 
-  const favoriteSet = useMemo(
-    () => new Set(favoriteToolIds),
-    [favoriteToolIds],
-  );
-
   const categories = useMemo(() => {
     const unique = new Set((tools ?? []).map((tool) => tool.category));
     return Array.from(unique).sort();
@@ -71,14 +61,13 @@ export const ToolsPage = () => {
     });
 
     if (!onlyFavorites.value) return value;
-    return value.filter((tool) => favoriteSet.has(tool.id));
+    return value.filter((tool) => tool.isFavorite);
   }, [
     tools,
     debouncedSearchText,
     category,
     sort,
     onlyFavorites.value,
-    favoriteSet,
   ]);
 
   const handleOpenCreate = useCallback(() => {
@@ -109,6 +98,16 @@ export const ToolsPage = () => {
   const handleDelete = useCallback(async (tool: Tool) => {
     await deleteTool(tool.id);
   }, [deleteTool]);
+
+  const handleToggleFavorite = useCallback(
+    async (toolId: string) => {
+      const tool = tools?.find((item) => item.id === toolId);
+      if (!tool) return;
+
+      await updateTool(toolId, { isFavorite: !tool.isFavorite });
+    },
+    [tools, updateTool],
+  );
 
   return (
     <section className="tools-page">
@@ -171,8 +170,8 @@ export const ToolsPage = () => {
                 <ToolCard
                   key={tool.id}
                   tool={tool}
-                  isFavorite={favoriteSet.has(tool.id)}
-                  onToggleFavorite={toggleFavorite}
+                  isFavorite={tool.isFavorite}
+                  onToggleFavorite={handleToggleFavorite}
                   onEdit={handleOpenEdit}
                   onDelete={handleDelete}
                 />

@@ -1,17 +1,13 @@
 import "./ToolsDetailPage.css";
-import { Link, useOutletContext, useParams } from "react-router-dom";
-import { FavoritesOutletContext } from "../../domain/tools/favorites-outlet-context";
+import { Link, useParams } from "react-router-dom";
 import { ToolHeaderDetail } from "./components/ToolHeaderDetail";
 import { ToolDescription } from "./components/ToolDescription";
 import { ToolTags } from "./components/ToolTags";
 import { useTools } from "../../../state-effects/tools/hooks/useTools";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 export const ToolsDetailPage = () => {
   const { toolId } = useParams<{ toolId: string }>();
-
-  const { favoriteToolIds, toggleFavorite } =
-    useOutletContext<FavoritesOutletContext>();
 
   const {
     selectedTool: tool,
@@ -19,6 +15,7 @@ export const ToolsDetailPage = () => {
     detailError: error,
     loadToolById,
     clearSelectedTool,
+    updateTool,
   } = useTools();
 
   useEffect(() => {
@@ -73,14 +70,22 @@ export const ToolsDetailPage = () => {
       </section>
     );
 
-  const isFavorite = favoriteToolIds.includes(tool.id);
+  const handleToggleFavorite = useCallback(
+    async (currentToolId: string) => {
+      if (!tool) return;
+
+      await updateTool(currentToolId, { isFavorite: !tool.isFavorite });
+      await loadToolById(currentToolId);
+    },
+    [tool, updateTool, loadToolById],
+  );
 
   return (
     <section className="tool-detail-page">
       <ToolHeaderDetail
         tool={tool}
-        isFavorite={isFavorite}
-        onToggleFavorite={toggleFavorite}
+        isFavorite={tool.isFavorite}
+        onToggleFavorite={handleToggleFavorite}
       />
       <ToolDescription description={tool.description} />
       <ToolTags tags={tool.tags} />

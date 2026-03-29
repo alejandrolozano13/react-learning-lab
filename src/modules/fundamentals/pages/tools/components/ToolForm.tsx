@@ -1,7 +1,9 @@
-import { useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Trash2 } from "lucide-react";
 import { Form } from "@/components/form";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 
 import {
   toolFormSchema,
@@ -10,7 +12,8 @@ import {
 } from "./tool-form.schema";
 
 import { mapToolFormToValues } from "./tool-form.mapper";
-import type { ToolFormValues } from "./tool-form.types";
+import type { ToolFormFields, ToolFormValues } from "./tool-form.types";
+import { useEffect, useMemo } from "react";
 
 type ToolFormProps = {
   initialValues?: Partial<ToolFormValues>;
@@ -19,11 +22,11 @@ type ToolFormProps = {
   onSubmit: (values: ToolFormValues) => void;
 };
 
-const defaultValues: ToolFormValues = {
+const defaultValues: ToolFormFields = {
   name: "",
   description: "",
   category: "dev",
-  tags: [],
+  tags: [{ value: "" }],
   isFavorite: false,
 };
 
@@ -33,25 +36,42 @@ export function ToolForm({
   submitLabel,
   onSubmit,
 }: ToolFormProps) {
-  const resolvedInitialValues = {
-    ...defaultValues,
-    ...initialValues,
-  };
+  const resolvedInitialValues: ToolFormFields = useMemo(
+    () => ({
+      ...defaultValues,
+      ...initialValues,
+      tags: initialValues?.tags?.length
+        ? initialValues.tags.map((tag) => ({ value: tag }))
+        : [{ value: "" }],
+    }),
+    [initialValues],
+  );
 
   const methods = useForm<ToolFormInput, undefined, ToolFormData>({
     resolver: zodResolver(toolFormSchema),
-    defaultValues: {
-      name: resolvedInitialValues.name,
-      description: resolvedInitialValues.description,
-      category: resolvedInitialValues.category,
-      tags: resolvedInitialValues.tags.join(", "),
-    },
+    defaultValues: resolvedInitialValues,
   });
 
-  const { handleSubmit } = methods;
+  const {
+    control,
+    handleSubmit,
+    register,
+    formState: { isSubmitting },
+    reset,
+    watch,
+  } = methods;
+
+  const { fields, append, remove } = useFieldArray({ control, name: "tags" });
+
+  const tags = watch("tags");
+  const canAddTag = Boolean(tags[tags.length - 1]?.value.trim());
+
+  useEffect(() => {
+    reset(resolvedInitialValues);
+  }, [resolvedInitialValues, reset]);
 
   const submitChanges = (data: ToolFormData) => {
-    const values = mapToolFormToValues(data, resolvedInitialValues);
+    const values = mapToolFormToValues(data);
     onSubmit(values);
   };
 
@@ -98,16 +118,64 @@ export function ToolForm({
         </Form.Field>
 
         <Form.Field>
-          <Form.Label htmlFor="tool-tags">Tags</Form.Label>
-          <Form.Input
-            id="tool-tags"
-            name="tags"
-            placeholder="Digite e separe por vírgula"
+          <Form.Label>Tags</Form.Label>
+
+          <div className="space-y-3">
+            {fields.map((field, index) => (
+              <div key={field.id} className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <input
+                    {...register(`tags.${index}.value` as const)}
+                    placeholder="Digite uma tag"
+                    className="h-11 w-full rounded-xl border border-zinc-300 px-4 outline-none transition focus:border-emerald-700"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => remove(index)}
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-red-600 text-white transition hover:bg-red-500"
+                    disabled={!canAddTag}
+                    aria-label={`Remover tag ${index + 1}`}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+
+                <Form.Error name={`tags.${index}.value` as const} />
+              </div>
+            ))}
+
+            <Button
+              type="button"
+              onClick={() => append({ value: "" })}
+              className="h-11 rounded-xl bg-emerald-700 px-4 text-white hover:bg-emerald-600"
+              disabled={!canAddTag}
+            >
+              Adicionar tag
+            </Button>
+          </div>
+        </Form.Field>
+
+        <Form.Field className="flex items-center justify-between rounded-xl border border-zin-200 px-4 py-3">
+          <div>
+            <p className="text-sm font-medium">Marcar como favorita</p>
+            <p className="text-xs text-zinc-500">
+              Destaque esta ferramente como favorita
+            </p>
+          </div>
+
+          <Controller
+            name="isFavorite"
+            control={control}
+            render={({field}) => (
+              <Switch
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+            )}
           />
-          <Form.Error name="tags" />
         </Form.Field>
       </div>
-
       <Form.Actions className="ml-2 mr-2">
         <Button
           type="submit"
