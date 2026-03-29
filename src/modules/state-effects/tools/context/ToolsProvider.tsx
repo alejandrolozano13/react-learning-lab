@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useReducer } from "react";
+import { ReactNode, useCallback, useMemo, useReducer } from "react";
 import { toolsReducer } from "../state/toolsReducer";
 import { ToolsState } from "../types/tools.types";
 import { toolsActions } from "../types/toolsActions.types";
@@ -154,27 +154,49 @@ export function ToolsProvider({ children }: Props) {
     dispatch(toolsActions.mutationClear());
   }, []);
 
+  const contextValue = useMemo(
+    () => ({
+      // values
+      tools: state.tools,
+      listLoading: state.listLoading,
+      listError: state.listError,
+      reloadList,
+      loadToolById,
+      detailLoading: state.detailLoading,
+      selectedTool: state.selectedTool,
+      detailError: state.detailError,
+      clearSelectedTool,
+      mutationLoading: state.mutationLoading,
+      mutationError: state.mutationError,
+      mutationType: state.mutationType,
+      createTool,
+      updateTool,
+      deleteTool,
+      clearMutationState,
+    }),
+    [
+      // dependencies
+      state.tools,
+      state.listLoading,
+      state.listError,
+      state.detailLoading,
+      state.selectedTool,
+      state.detailError,
+      state.mutationLoading,
+      state.mutationError,
+      state.mutationType,
+      reloadList,
+      loadToolById,
+      clearSelectedTool,
+      createTool,
+      updateTool,
+      deleteTool,
+      clearMutationState,
+    ],
+  );
+
   return (
-    <ToolsContext.Provider
-      value={{
-        tools: state.tools,
-        listLoading: state.listLoading,
-        listError: state.listError,
-        reloadList,
-        loadToolById,
-        detailLoading: state.detailLoading,
-        selectedTool: state.selectedTool,
-        detailError: state.detailError,
-        clearSelectedTool,
-        mutationLoading: state.mutationLoading,
-        mutationError: state.mutationError,
-        mutationType: state.mutationType,
-        createTool,
-        updateTool,
-        deleteTool,
-        clearMutationState,
-      }}
-    >
+    <ToolsContext.Provider value={contextValue}>
       {children}
     </ToolsContext.Provider>
   );

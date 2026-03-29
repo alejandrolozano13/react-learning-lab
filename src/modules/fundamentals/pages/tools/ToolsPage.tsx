@@ -7,7 +7,7 @@ import { ToolCard } from "../../components/tools/ToolCard";
 import { ToolsFiltersBar } from "./components/ToolsFiltersBar";
 import { useOutletContext } from "react-router-dom";
 import { FavoritesOutletContext } from "../../domain/tools/favorites-outlet-context";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDebouncedValue } from "../../../state-effects/hooks/useDebouncedValue";
 import { EmptyToolsPage } from "./EmptyToolsPage";
 import { useToggle } from "../../../state-effects/hooks/useToggle";
@@ -81,34 +81,34 @@ export const ToolsPage = () => {
     favoriteSet,
   ]);
 
-  const handleOpenCreate = () => {
+  const handleOpenCreate = useCallback(() => {
     setFormMode("create");
     setSelectedTool(null);
     setIsFormOpen(true);
-  };
+  }, []);
 
-  const handleOpenEdit = (tool: Tool) => {
+  const handleOpenEdit = useCallback((tool: Tool) => {
     setFormMode("edit");
     setSelectedTool(tool);
     setIsFormOpen(true);
-  };
+  }, []);
 
-  const handleCloseForm = () => {
+  const handleCloseForm = useCallback(() => {
     clearMutationState();
     setIsFormOpen(false);
     setSelectedTool(null);
-  };
+  }, [clearMutationState]);
 
-  const handleSubmitForm = async (values: ToolFormValues) => {
+  const handleSubmitForm = useCallback(async (values: ToolFormValues) => {
     if (formMode === "create") await createTool(values);
     if (formMode === "edit" && selectedTool)
       await updateTool(selectedTool.id, values);
     handleCloseForm();
-  };
+  }, [formMode, selectedTool, createTool, updateTool, handleCloseForm]);
 
-  const handleDelete = async (tool: Tool) => {
+  const handleDelete = useCallback(async (tool: Tool) => {
     await deleteTool(tool.id);
-  };
+  }, [deleteTool]);
 
   return (
     <section className="tools-page">
