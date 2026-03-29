@@ -5,4 +5,5 @@ export type Tool = {
   category: "dev" | "ui" | "utils" | "testing";
   tags: string[];
   isFavorite: boolean;
+  repositoryUrl?: string;
 };

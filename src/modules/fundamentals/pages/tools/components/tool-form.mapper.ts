@@ -7,6 +7,10 @@ export function mapToolFormToValues(data: ToolFormData): ToolFormValues {
     description: data.description.trim(),
     category: data.category,
     isFavorite: data.isFavorite,
+    repositoryUrl: data.repositoryUrl.trim() || undefined,
     tags: data.tags.map((tag) => tag.value.trim()).filter(Boolean),
+    metadata: {
+      website: data.metadata.website.trim(),
+    },
   };
 }

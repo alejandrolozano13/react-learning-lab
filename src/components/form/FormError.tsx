@@ -14,7 +14,9 @@ export function FormError<TFieldValues extends FieldValues>({
     formState: { errors },
   } = useFormContext();
 
-  const error = errors[name];
+  const error = String(name)
+    .split(".")
+    .reduce<any>((current, key) => current?.[key], errors);
 
   return !error ? null : (
     <p className={cn("text-sm text-red-500", className)}>

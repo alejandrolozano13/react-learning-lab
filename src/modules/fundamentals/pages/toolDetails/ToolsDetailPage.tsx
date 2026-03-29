@@ -1,10 +1,11 @@
 import "./ToolsDetailPage.css";
 import { Link, useParams } from "react-router-dom";
+import { useCallback, useEffect } from "react";
+
 import { ToolHeaderDetail } from "./components/ToolHeaderDetail";
 import { ToolDescription } from "./components/ToolDescription";
 import { ToolTags } from "./components/ToolTags";
 import { useTools } from "../../../state-effects/tools/hooks/useTools";
-import { useCallback, useEffect } from "react";
 
 export const ToolsDetailPage = () => {
   const { toolId } = useParams<{ toolId: string }>();
@@ -20,8 +21,8 @@ export const ToolsDetailPage = () => {
 
   useEffect(() => {
     if (!toolId) return;
-    const controller = new AbortController();
 
+    const controller = new AbortController();
     void loadToolById(toolId, { signal: controller.signal });
 
     return () => {
@@ -29,6 +30,16 @@ export const ToolsDetailPage = () => {
       clearSelectedTool();
     };
   }, [toolId, loadToolById, clearSelectedTool]);
+
+  const handleToggleFavorite = useCallback(
+    async (currentToolId: string) => {
+      if (!tool) return;
+
+      await updateTool(currentToolId, { isFavorite: !tool.isFavorite });
+      await loadToolById(currentToolId);
+    },
+    [tool, updateTool, loadToolById],
+  );
 
   if (!toolId) {
     return (
@@ -39,14 +50,15 @@ export const ToolsDetailPage = () => {
     );
   }
 
-  if (loading)
+  if (loading) {
     return (
       <section style={{ padding: 16 }}>
         <p>Carregando...</p>
       </section>
     );
+  }
 
-  if (error)
+  if (error) {
     return (
       <section style={{ padding: 16 }}>
         <h1>Não foi possível carregar a ferramenta</h1>
@@ -61,24 +73,16 @@ export const ToolsDetailPage = () => {
         </div>
       </section>
     );
+  }
 
-  if (!tool)
+  if (!tool) {
     return (
       <section style={{ padding: 16 }}>
         <h1>Tool não encontrada</h1>
         <Link to="/tools">Voltar</Link>
       </section>
     );
-
-  const handleToggleFavorite = useCallback(
-    async (currentToolId: string) => {
-      if (!tool) return;
-
-      await updateTool(currentToolId, { isFavorite: !tool.isFavorite });
-      await loadToolById(currentToolId);
-    },
-    [tool, updateTool, loadToolById],
-  );
+  }
 
   return (
     <section className="tool-detail-page">

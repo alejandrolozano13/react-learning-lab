@@ -28,6 +28,10 @@ const defaultValues: ToolFormFields = {
   category: "dev",
   tags: [{ value: "" }],
   isFavorite: false,
+  repositoryUrl: "",
+  metadata: {
+    website: "",
+  },
 };
 
 export function ToolForm({
@@ -43,6 +47,10 @@ export function ToolForm({
       tags: initialValues?.tags?.length
         ? initialValues.tags.map((tag) => ({ value: tag }))
         : [{ value: "" }],
+      metadata: {
+        ...defaultValues.metadata,
+        ...initialValues?.metadata,
+      },
     }),
     [initialValues],
   );
@@ -56,15 +64,23 @@ export function ToolForm({
     control,
     handleSubmit,
     register,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isDirty, isValid },
     reset,
     watch,
   } = methods;
 
+  const isBusy = isSubmitting || loading;
+
   const { fields, append, remove } = useFieldArray({ control, name: "tags" });
 
   const tags = watch("tags");
+  const category = watch("category");
   const canAddTag = Boolean(tags[tags.length - 1]?.value.trim());
+  const tagsError = methods.formState.errors.tags;
+  const tagsMessage =
+    tagsError && !Array.isArray(tagsError) && "message" in tagsError
+      ? String(tagsError.message)
+      : null;
 
   useEffect(() => {
     reset(resolvedInitialValues);
@@ -117,6 +133,20 @@ export function ToolForm({
           <Form.Error name="category" />
         </Form.Field>
 
+        {category === "dev" ? (
+          <Form.Field>
+            <Form.Label htmlFor="tool-repository">Repositório</Form.Label>
+
+            <Form.Input
+              id="tool-repository"
+              name="repositoryUrl"
+              placeholder="https://github.com/..."
+            />
+
+            <Form.Error name="repositoryUrl" />
+          </Form.Field>
+        ) : null}
+
         <Form.Field>
           <Form.Label>Tags</Form.Label>
 
@@ -154,6 +184,10 @@ export function ToolForm({
               Adicionar tag
             </Button>
           </div>
+
+          {tagsMessage ? (
+            <p className="text-sm text-red-500">{tagsMessage}</p>
+          ) : null}
         </Form.Field>
 
         <Form.Field className="flex items-center justify-between rounded-xl border border-zin-200 px-4 py-3">
@@ -167,22 +201,31 @@ export function ToolForm({
           <Controller
             name="isFavorite"
             control={control}
-            render={({field}) => (
-              <Switch
-                checked={field.value}
-                onCheckedChange={field.onChange}
-              />
+            render={({ field }) => (
+              <Switch checked={field.value} onCheckedChange={field.onChange} />
             )}
           />
+        </Form.Field>
+
+        <Form.Field>
+          <Form.Label htmlFor="tool-website">Website</Form.Label>
+
+          <Form.Input
+            id="tool-website"
+            name="metadata.website"
+            placeholder="https://site.com"
+          />
+
+          <Form.Error name="metadata.website" />
         </Form.Field>
       </div>
       <Form.Actions className="ml-2 mr-2">
         <Button
           type="submit"
-          disabled={loading}
+          disabled={isBusy || !isDirty}
           className="h-11 w-full rounded-xl bg-emerald-700 text-white hover:bg-emerald-600"
         >
-          {loading ? "Salvando" : submitLabel}
+          {isBusy ? "Salvando..." : "Salvar"}
         </Button>
       </Form.Actions>
     </Form.Root>
